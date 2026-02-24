@@ -1,0 +1,45 @@
+# Dependencies
+node_modules/
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Build outputs
+dist/
+
+# Vite
+.vite/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Yarn PnP
+# Note: .pnp.cjs and .pnp.loader.mjs should be committed
+# Only ignore temporary PnP data files
+.pnp.data.json
+
+# Logs
+*.log
+
+# Sonar
+.scannerwork/
+
+# Sandbox (experimental pages and routes - gitignored to avoid merge conflicts)
+sandbox/pages/*
+sandbox/routes.tsx
+
+# Claude drafts and working documents
+.claude/drafts/

@@ -1,0 +1,33 @@
+import React from 'react';
+import { Route } from 'react-router-dom';
+
+/**
+ * Experimental Routes Template
+ *
+ * This is a template for adding your experimental sandbox routes.
+ * Both this file and your sandbox pages are gitignored to prevent merge conflicts.
+ *
+ * To add a new prototype concept:
+ * 1. Create a new file in sandbox/pages/ (e.g. sandbox/pages/MyIdea.tsx)
+ * 2. Import it below and add a route to the experimentalRoutes array
+ *
+ * Example:
+ * ```tsx
+ * import MyIdea from './pages/MyIdea';
+ *
+ * export const experimentalRoutes: React.ReactElement[] = [
+ *   <Route key="my-idea" path="/my-idea" element={<MyIdea />} />
+ * ];
+ * ```
+ *
+ * Note: sandbox/pages/ and sandbox/routes.tsx are both gitignored —
+ * experiment freely without worrying about conflicts when pulling updates.
+ *
+ * When a concept is ready to share, move the component to src/components/ or
+ * src/pages/ and add a permanent route to src/App.tsx.
+ */
+
+export const experimentalRoutes: React.ReactElement[] = [
+  // Add your routes here
+  // Example: <Route key="my-idea" path="/my-idea" element={<MyIdea />} />
+];

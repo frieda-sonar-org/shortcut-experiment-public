@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<!--
+  GitHub Pages Documentation
+  ──────────────────────────
+  Fetches README.md and TROUBLESHOOTING.md at page load.
+  Refresh the browser (F5) to pick up any changes to those files.
+
+  To open:
+    Option A — Vite dev server (recommended):
+      yarn dev  →  http://localhost:5173/docs.html
+
+    Option B — Python simple server:
+      python3 -m http.server 8080  →  http://localhost:8080/docs.html
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitHub Pages Docs</title>
+
+  <!-- Markdown renderer -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@12/marked.min.js"></script>
+
+  <!-- Syntax highlighting -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/core.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/typescript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/yaml.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/languages/shell.min.js"></script>
+
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #13141a;
+      --surface:     #1c1d26;
+      --surface-2:   #232430;
+      --border:      #2e3040;
+      --text:        #dde1f0;
+      --text-muted:  #7c809a;
+      --accent:      #7b8cde;
+      --accent-dim:  rgba(123, 140, 222, 0.15);
+      --code-bg:     #1a1b25;
+      --tab-h:       48px;
+      --nav-h:       56px;
+      --max-w:       820px;
+      --font-sans:   -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono:   "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── Top bar ── */
+    .top-bar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      padding: 0 32px;
+      gap: 24px;
+    }
+
+    .top-bar-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .tab {
+      position: relative;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      padding: 0 16px;
+      height: var(--tab-h);
+      border-radius: 6px 6px 0 0;
+      transition: color 0.15s, background 0.15s;
+    }
+
+    .tab:hover { color: var(--text); background: var(--accent-dim); }
+
+    .tab.active {
+      color: var(--text);
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;  /* sits on top of the border-bottom */
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--accent);
+      border-radius: 2px 2px 0 0;
+    }
+
+    /* ── Content area ── */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .content-wrapper {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 48px 32px 80px;
+    }
+
+    /* ── Loading / error states ── */
+    .loading, .error {
+      padding: 64px 32px;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+    .error { color: #e06c75; }
+
+    /* ── Markdown typography ── */
+    .md h1, .md h2, .md h3, .md h4 {
+      color: var(--text);
+      font-weight: 600;
+      line-height: 1.3;
+      margin-top: 2em;
+      margin-bottom: 0.6em;
+    }
+    .md h1:first-child,
+    .md h2:first-child { margin-top: 0; }
+
+    .md h1 { font-size: 1.8em; border-bottom: 1px solid var(--border); padding-bottom: 0.3em; }
+    .md h2 { font-size: 1.3em; border-bottom: 1px solid var(--border); padding-bottom: 0.25em; }
+    .md h3 { font-size: 1.1em; }
+
+    .md p { margin-bottom: 1em; }
+
+    .md a { color: var(--accent); text-decoration: none; }
+    .md a:hover { text-decoration: underline; }
+
+    .md ul, .md ol {
+      padding-left: 1.6em;
+      margin-bottom: 1em;
+    }
+    .md li { margin-bottom: 0.3em; }
+
+    /* Blockquotes (used for tips/notes) */
+    .md blockquote {
+      border-left: 3px solid var(--accent);
+      background: var(--accent-dim);
+      margin: 1.2em 0;
+      padding: 12px 16px;
+      border-radius: 0 6px 6px 0;
+      color: var(--text);
+    }
+    .md blockquote p { margin-bottom: 0; }
+
+    /* Horizontal rule */
+    .md hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2.5em 0;
+    }
+
+    /* Inline code */
+    .md code {
+      font-family: var(--font-mono);
+      font-size: 0.875em;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 5px;
+    }
+
+    /* Code blocks */
+    .md pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      overflow-x: auto;
+      margin: 1.2em 0;
+    }
+    .md pre code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 0.85em;
+      line-height: 1.6;
+    }
+
+    /* Tables */
+    .md table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2em 0;
+      font-size: 0.9em;
+    }
+    .md th {
+      background: var(--surface-2);
+      color: var(--text);
+      font-weight: 600;
+      text-align: left;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+    }
+    .md td {
+      padding: 9px 14px;
+      border: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .md tr:nth-child(even) td { background: var(--surface); }
+    .md tr:hover td { background: var(--accent-dim); }
+
+    /* Checklist (task list items) */
+    .md input[type="checkbox"] {
+      margin-right: 6px;
+      accent-color: var(--accent);
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <span class="top-bar-title">GitHub Pages Docs</span>
+    <div class="tabs">
+      <button class="tab active" data-tab="readme">Setup Guide</button>
+      <button class="tab" data-tab="troubleshoot">Troubleshooting</button>
+    </div>
+  </div>
+
+  <div id="readme" class="tab-content active">
+    <div class="content-wrapper">
+      <div class="loading">Loading…</div>
+    </div>
+  </div>
+
+  <div id="troubleshoot" class="tab-content">
+    <div class="content-wrapper">
+      <div class="loading">Loading…</div>
+    </div>
+  </div>
+
+  <script>
+    // Configure marked to use highlight.js for code blocks
+    marked.setOptions({
+      highlight: (code, lang) => {
+        if (lang && hljs.getLanguage(lang)) {
+          return hljs.highlight(code, { language: lang }).value;
+        }
+        return hljs.highlightAuto(code).value;
+      },
+    });
+
+    async function loadMarkdown(file, tabId) {
+      const wrapper = document.querySelector(`#${tabId} .content-wrapper`);
+      try {
+        const res = await fetch(file);
+        if (!res.ok) throw new Error(`${res.status} ${res.statusText}`);
+        const text = await res.text();
+        wrapper.innerHTML = `<div class="md">${marked.parse(text)}</div>`;
+      } catch (err) {
+        wrapper.innerHTML = `<div class="error">
+          Could not load <code>${file}</code>.<br><br>
+          Make sure you're opening this page through a server, not directly as a file.<br>
+          Run <code>yarn dev</code> then visit <code>http://localhost:5173/docs.html</code>
+        </div>`;
+      }
+    }
+
+    // Load both files on page load
+    loadMarkdown('README.md', 'readme');
+    loadMarkdown('TROUBLESHOOTING.md', 'troubleshoot');
+
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,2 @@
+export declare const TableRoot: import('../../../node_modules/react').ForwardRefExoticComponent<(Omit<import('./TableTypes').TablePropsWithLabel, "ref"> | Omit<import('./TableTypes').TablePropsWithLabeledBy, "ref">) & import('../../../node_modules/react').RefAttributes<HTMLTableElement>>;
+//# sourceMappingURL=Table.d.ts.map
