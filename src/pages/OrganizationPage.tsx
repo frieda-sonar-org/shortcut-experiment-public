@@ -1,8 +1,9 @@
-import { Layout } from '@sonarsource/echoes-react';
-import { useParams } from 'react-router-dom';
+import { Badge, Layout } from '@sonarsource/echoes-react';
+import { Navigate, useParams } from 'react-router-dom';
+import { PageContentHeader } from '../components/PageContentHeader';
 
 // ─── Content slot ───────────────────────────────────────────────────────────
-// Replace this component with your actual page content.
+// Replace this component with your actual section content.
 function PageContent() {
   return (
     <div style={{
@@ -41,23 +42,36 @@ function Filters() {
   );
 }
 
+// Derive a human-readable label from a URL segment (e.g. "quality-gates" → "Quality gates")
+function sectionLabel(segment: string): string {
+  return segment.charAt(0).toUpperCase() + segment.slice(1).replaceAll('-', ' ');
+}
+
 // ─── Page ────────────────────────────────────────────────────────────────────
 export default function OrganizationPage() {
-  const { orgId } = useParams<{ orgId: string }>();
-  const orgName = orgId ?? 'Organization';
+  const { orgId, '*': subPath } = useParams<{ orgId: string; '*': string }>();
+  const org = orgId ?? 'organization';
+
+  // No sub-path → redirect to the Projects default page
+  if (!subPath) {
+    return <Navigate to={`/organizations/${org}/projects`} replace />;
+  }
+
+  // Strip query string from sub-path to get the section segment
+  const section = subPath.split('?')[0].split('/')[0] || 'projects';
+  const label = sectionLabel(section);
 
   return (
     <Layout.ContentGrid>
-      <Layout.ContentHeader
-        breadcrumbs={
-          <Layout.ContentHeader.Breadcrumbs
-            items={[
-              { linkElement: 'Organizations', to: '/organizations' },
-              { linkElement: orgName },
-            ]}
-          />
-        }
-        title={<Layout.ContentHeader.Title>{orgName}</Layout.ContentHeader.Title>}
+      <PageContentHeader
+        title={org}
+        breadcrumbs={[
+          { linkElement: org, to: `/organizations/${org}/projects` },
+          { linkElement: label },
+        ]}
+        badge={<Badge variety="neutral" size="small">Public</Badge>}
+        metadata="Created by lisalee00 · Last analysis 2 hours ago"
+        githubUrl="https://github.com"
       />
 
       <Layout.AsideLeft size="medium">

@@ -24,6 +24,7 @@ function OrgAvatar({ letter, color = '#6b7280' }: { letter: string; color?: stri
       width: '1.25rem', height: '1.25rem', borderRadius: '4px',
       backgroundColor: color, color: '#fff',
       fontSize: '0.7rem', fontWeight: 700, flexShrink: 0,
+      marginRight: 'var(--echoes-dimension-space-100)',
     }}>
       {letter}
     </span>
@@ -76,12 +77,12 @@ export function GlobalNav() {
             </>
           }
         >
-          <Layout.GlobalNavigation.Action Icon={IconPlus} ariaLabel="Create" />
+          <Layout.GlobalNavigation.Action Icon={IconPlus} ariaLabel="New.." />
         </DropdownMenu>
 
         {/* TODO: Replace with your user's avatar URL and name when customising */}
         <Layout.GlobalNavigation.Account
-          ariaLabel="User menu"
+          ariaLabel="Account"
           avatar={
             <img
               src="https://randomuser.me/api/portraits/men/12.jpg"
@@ -95,18 +96,9 @@ export function GlobalNav() {
               }}
             />
           }
+          header={{ label: 'lisalee00', helpText: 'lisa.lee@sonarsource.com' }}
           items={
             <>
-              <DropdownMenu.GroupLabel>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                  <span style={{ fontWeight: 600 }}>lisalee00</span>
-                  <span style={{ fontSize: '0.75rem', color: 'var(--echoes-color-text-subtle)' }}>
-                    lisa.lee@sonarsource.com
-                  </span>
-                </div>
-              </DropdownMenu.GroupLabel>
-              <DropdownMenu.Separator />
-
               <DropdownMenu.ItemLink to="/account">My account</DropdownMenu.ItemLink>
               <DropdownMenu.Separator />
 
@@ -131,7 +123,7 @@ export function GlobalNav() {
               >
                 lisa-lee-sonar
               </DropdownMenu.ItemLink>
-              <DropdownMenu.ItemLink to="/organizations">View all</DropdownMenu.ItemLink>
+              <DropdownMenu.ItemLink to="/organizations" isMatchingFullPath>View all</DropdownMenu.ItemLink>
               <DropdownMenu.Separator />
 
               <DropdownMenu.GroupLabel>
