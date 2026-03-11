@@ -51,6 +51,8 @@ src/
 
   components/
     GlobalNav.tsx           — Global navigation header (top bar, Echoes-based)
+    SidebarNav.tsx          — Project-level sidebar (Overview, Analysis group, PR/Branches counts)
+    OrgSidebarNav.tsx       — Organisation-level sidebar (Projects, Issues, Members, Billing, Settings)
     PRSidebar.tsx           — PR detail navigation (Overview / Summary / Code Review / Issues)
     PRSelectorDropdown.tsx  — Branch/PR selector dropdown
     PRFileGroups.tsx        — File groups left panel (used in PRFilesView)
@@ -64,6 +66,7 @@ src/
     MyPullRequestsPage.tsx  — My Pull Requests (collapsible inbox sections)
     PROverview.tsx          — PR overview (metrics dashboard, security snapshot)
     PRFilesView.tsx         — Two-column files view (PRSidebar + file groups + diffs)
+    OrganizationPage.tsx    — Organisation template (OrgSidebarNav + ContentHeader + AsideLeft filters + PageContent)
     NotFound.tsx            — 404 fallback
 
   data/
@@ -93,6 +96,9 @@ scripts/
 | `/my-pull-requests` | `MyPullRequestsPage` | Inbox-style PR list |
 | `/overview/:id` | `PROverview` | PR metrics dashboard |
 | `/review/:id` | `PRFilesView` | File diffs review view |
+| `/organizations/:id` | `OrganizationPage` | Organisation template (sidebar + filters + content) |
+
+**Sidebar switching:** `App.tsx` renders `OrgSidebarNav` for `/organizations/*` routes and `SidebarNav` for all other routes.
 
 ## Sandbox Workflow
 

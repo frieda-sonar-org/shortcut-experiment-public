@@ -22,13 +22,13 @@ export function SidebarNav() {
     <Layout.SidebarNavigation>
       <Layout.SidebarNavigation.Body>
 
-        <Layout.SidebarNavigation.Item Icon={IconOverview} to="/overview" enableTooltip>
+        <Layout.SidebarNavigation.Item Icon={IconOverview} to="/project/overview" enableTooltip>
           Overview
         </Layout.SidebarNavigation.Item>
 
         <Layout.SidebarNavigation.Item
           Icon={IconSlideshow}
-          to="/dashboards"
+          to="/project/dashboards"
           enableTooltip
           suffix={<Badge variety="info" size="small">New</Badge>}
         >
@@ -36,73 +36,73 @@ export function SidebarNav() {
         </Layout.SidebarNavigation.Item>
 
         <Layout.SidebarNavigation.Group label="Analysis">
-          <Layout.SidebarNavigation.Item Icon={IconGraph3} to="/summary" enableTooltip>
+          <Layout.SidebarNavigation.Item Icon={IconGraph3} to="/project/summary" enableTooltip>
             Summary
           </Layout.SidebarNavigation.Item>
 
           <Layout.SidebarNavigation.Item
             Icon={IconComment}
-            to="/review"
+            to="/project/review"
             enableTooltip
             suffix={<Badge variety="info" size="small">New</Badge>}
           >
             Review
           </Layout.SidebarNavigation.Item>
 
-          <Layout.SidebarNavigation.Item Icon={IconBug} to="/issues" enableTooltip>
+          <Layout.SidebarNavigation.Item Icon={IconBug} to="/project/issues" enableTooltip>
             Issues
           </Layout.SidebarNavigation.Item>
 
-          <Layout.SidebarNavigation.Item Icon={IconSecurityFinding} to="/security-hotspots" enableTooltip>
+          <Layout.SidebarNavigation.Item Icon={IconSecurityFinding} to="/project/security-hotspots" enableTooltip>
             Security Hotspots
           </Layout.SidebarNavigation.Item>
 
-          <Layout.SidebarNavigation.Item Icon={IconTarget} to="/dependency-risks" enableTooltip>
+          <Layout.SidebarNavigation.Item Icon={IconTarget} to="/project/dependency-risks" enableTooltip>
             Dependency Risks
           </Layout.SidebarNavigation.Item>
 
-          <Layout.SidebarNavigation.Item Icon={IconSparkleInShield} to="/security-reports" enableTooltip>
+          <Layout.SidebarNavigation.Item Icon={IconSparkleInShield} to="/project/security-reports" enableTooltip>
             Security Reports
           </Layout.SidebarNavigation.Item>
 
           <Layout.SidebarNavigation.Item
             Icon={IconBranch}
-            to="/architecture"
+            to="/project/architecture"
             enableTooltip
             suffix={<Badge variety="highlight" size="small">Beta</Badge>}
           >
             Architecture
           </Layout.SidebarNavigation.Item>
 
-          <Layout.SidebarNavigation.Item Icon={IconGraph3} to="/measures" enableTooltip>
+          <Layout.SidebarNavigation.Item Icon={IconGraph3} to="/project/measures" enableTooltip>
             Measures
           </Layout.SidebarNavigation.Item>
 
-          <Layout.SidebarNavigation.Item Icon={IconFileCode} to="/code" enableTooltip>
+          <Layout.SidebarNavigation.Item Icon={IconFileCode} to="/project/code" enableTooltip>
             Code
           </Layout.SidebarNavigation.Item>
 
-          <Layout.SidebarNavigation.Item Icon={IconProject} to="/dependencies" enableTooltip>
+          <Layout.SidebarNavigation.Item Icon={IconProject} to="/project/dependencies" enableTooltip>
             Dependencies
           </Layout.SidebarNavigation.Item>
 
-          <Layout.SidebarNavigation.Item Icon={IconSlideshow} to="/activity" enableTooltip>
+          <Layout.SidebarNavigation.Item Icon={IconSlideshow} to="/project/activity" enableTooltip>
             Activity
           </Layout.SidebarNavigation.Item>
         </Layout.SidebarNavigation.Group>
 
         <Layout.SidebarNavigation.AccordionItem Icon={IconInfo} label="Information">
-          <Layout.SidebarNavigation.Item Icon={IconSparkleInShield} to="/agent-activity" enableTooltip>
+          <Layout.SidebarNavigation.Item Icon={IconSparkleInShield} to="/project/agent-activity" enableTooltip>
             Agent activity
           </Layout.SidebarNavigation.Item>
-          <Layout.SidebarNavigation.Item Icon={IconProject} to="/project-information" enableTooltip>
+          <Layout.SidebarNavigation.Item Icon={IconProject} to="/project/project-information" enableTooltip>
             Project Information
           </Layout.SidebarNavigation.Item>
         </Layout.SidebarNavigation.AccordionItem>
 
         <Layout.SidebarNavigation.Item
           Icon={IconPullrequest}
-          to="/pull-requests"
+          to="/project/pull-requests"
           enableTooltip
           suffix={<BadgeCounter value={5} />}
         >
@@ -111,7 +111,7 @@ export function SidebarNav() {
 
         <Layout.SidebarNavigation.Item
           Icon={IconBranch}
-          to="/branches"
+          to="/project/branches"
           enableTooltip
           suffix={<BadgeCounter value={1} />}
         >

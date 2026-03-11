@@ -18,7 +18,7 @@ export default function NotFound() {
             }}
           >
             <Heading size={HeadingSize.Large}>404</Heading>
-            <Text style={{ color: 'var(--echoes-color-text-subdued)' }}>
+            <Text style={{ color: 'var(--echoes-color-text-default)' }}>
               Page not found. Navigate using the sidebar.
             </Text>
           </div>

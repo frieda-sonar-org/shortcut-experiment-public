@@ -1,64 +1,57 @@
 # GitHub Pages Setup Guide
 
-This guide covers how to set up a new Next.js project for GitHub Pages deployment.
+This guide covers how to set up a new Vite + React project for GitHub Pages deployment.
 
 ---
 
 ## First: Which GitHub account are you using?
 
-This matters because one org has a special npm configuration that breaks CI if you don't account for it.
+This determines who can view the deployed page and whether CI needs extra configuration.
 
-| GitHub account | npm in CI | Extra steps needed? |
-|---|---|---|
-| `sonar-cx-testing` | Standard — just works | No |
-| `sonarsource` | Standard — just works | No |
-| `frieda-sonar-org` | Broken by default (see below) | Yes — see Step 5 |
+| Account type | Example org | Who can view GH Pages | npm in CI | Extra steps? |
+|---|---|---|---|---|
+| **Sonar internal** | `sonar-cx-testing` | Sonarsourcers only | Standard — just works | No |
+| **External / testing** | `frieda-sonar-org` | Anyone (public) | Broken by default (see below) | Yes — see Step 5 |
 
-> **Why does `frieda-sonar-org` break?** Frieda's local `~/.npmrc` routes all npm traffic through an internal JFrog proxy. Any `package-lock.json` generated locally will contain JFrog URLs. GitHub Actions CI doesn't have credentials for that proxy, so `npm ci` fails with `401 Unauthorized`. The fix is in Step 5.
+> **Why does the external account break?** Local `~/.npmrc` routes all npm traffic through an internal JFrog proxy. Any `package-lock.json` generated locally will contain JFrog URLs. GitHub Actions CI doesn't have credentials for that proxy, so `npm ci` fails with `401 Unauthorized`. The fix is in Step 5.
 
 ---
 
 ## Step 1: Create the project
 
-Set up your Next.js project normally. The structure should follow the SQC-Template pattern — shared components under `shared/`, pages under `app/`.
+Copy the SQC-Template folder and follow the Quick Start in its CLAUDE.md. The structure should follow the template pattern — components under `src/components/`, pages under `src/pages/`.
 
 ---
 
-## Step 2: Configure `next.config.ts`
+## Step 2: Configure `vite.config.ts`
 
-This tells Next.js to produce a static export (required for GitHub Pages) and sets the URL paths correctly.
+This sets the base URL path for GitHub Pages deployment.
 
-**Deployed at the root of the domain** (e.g. `https://sonar-cx-testing.github.io/`):
-
-```typescript
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
-  ...(process.env.NODE_ENV === 'production' && { output: 'export' }),
-  images: { unoptimized: true },
-  basePath: '',
-  assetPrefix: '',
-};
-
-export default nextConfig;
-```
-
-**Deployed at a subdirectory** (e.g. `https://sonar-cx-testing.github.io/my-project/`):
+**Deployed at the root of the domain** (e.g. `https://your-org.github.io/`):
 
 ```typescript
-import type { NextConfig } from "next";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-const nextConfig: NextConfig = {
-  ...(process.env.NODE_ENV === 'production' && { output: 'export' }),
-  images: { unoptimized: true },
-  basePath: '/my-project',
-  assetPrefix: '/my-project',
-};
-
-export default nextConfig;
+export default defineConfig({
+  plugins: [react()],
+  base: '/',
+});
 ```
 
-> **Why `output: 'export'` only in production?** So `npm run dev` keeps working locally. Static export mode disables some Next.js features that the dev server handles fine.
+**Deployed at a subdirectory** (e.g. `https://your-org.github.io/my-project/`):
+
+```typescript
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  base: '/my-project/',
+});
+```
+
+> **Why set `base`?** Without it, Vite assumes assets are at `/`. On a subdirectory deploy, all JS/CSS will 404.
 
 ---
 
@@ -70,7 +63,7 @@ Create an empty file at `public/.nojekyll`:
 touch public/.nojekyll
 ```
 
-**Why this matters:** GitHub Pages runs Jekyll by default, and Jekyll ignores any file or folder that starts with an underscore. Next.js outputs its assets into `_next/` — without `.nojekyll`, all your JavaScript and CSS will 404 and the site will be a blank page.
+**Why this matters:** GitHub Pages runs Jekyll by default, and Jekyll ignores any file or folder that starts with an underscore. Vite outputs its assets into `_assets/` — without `.nojekyll`, all your JavaScript and CSS will 404 and the site will be a blank page.
 
 The file just needs to exist. It has no content.
 
@@ -78,9 +71,9 @@ The file just needs to exist. It has no content.
 
 ## Step 4: Create the GitHub Actions workflow
 
-Create `.github/workflows/deploy.yml` in your project. Use the version that matches your GitHub account (see the table at the top).
+Create `.github/workflows/deploy.yml` in your project. Use the version that matches your account type (see the table at the top).
 
-### For `sonar-cx-testing` and `sonarsource`:
+### For internal Sonar accounts:
 
 ```yaml
 name: Deploy to GitHub Pages
@@ -119,7 +112,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: out
+          path: dist
 
   deploy:
     needs: build
@@ -133,7 +126,7 @@ jobs:
         uses: actions/deploy-pages@v4
 ```
 
-### For `frieda-sonar-org`:
+### For external / testing accounts:
 
 Same as above, but replace the install step:
 
@@ -150,7 +143,7 @@ This deletes the locally-generated lock file (which contains JFrog URLs) and reg
 
 ## Step 5: Fix `package-lock.json` after every local `npm install`
 
-**This applies to ALL accounts**, not just `frieda-sonar-org`.
+**This applies to all account types.**
 
 When you run `npm install` on macOS, the generated `package-lock.json` only includes native binaries for macOS. It leaves out the Linux equivalents. Since GitHub Actions runs on Ubuntu, the Linux binaries won't be installed and the build will fail.
 
@@ -193,7 +186,7 @@ EOF
 
 This copies the missing Linux binary entries from a known-good reference lock file into yours.
 
-**If you're on `frieda-sonar-org`, also run this** to replace JFrog URLs with public npm URLs:
+**For external / testing accounts only — also run this** to replace JFrog URLs with public npm URLs:
 
 ```sh
 sed -i '' 's|https://repox.jfrog.io/artifactory/api/npm/npm/|https://registry.npmjs.org/|g' package-lock.json
@@ -235,10 +228,10 @@ The deploy job will print the live URL when it finishes.
 ## Quick checklist
 
 ```
-[ ] next.config.ts — output: 'export' in production, correct basePath
+[ ] vite.config.ts — correct base path set
 [ ] public/.nojekyll — empty file exists
-[ ] .github/workflows/deploy.yml — correct version for your account
+[ ] .github/workflows/deploy.yml — correct version for your account type
 [ ] package-lock.json — Linux binaries added (Python script)
-[ ] package-lock.json — JFrog URLs replaced (frieda-sonar-org only)
+[ ] package-lock.json — JFrog URLs replaced (external accounts only)
 [ ] GitHub repo Settings → Pages → Source = GitHub Actions
 ```
