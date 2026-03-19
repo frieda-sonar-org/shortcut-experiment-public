@@ -21,6 +21,7 @@ import ExplorePage from './pages/ExplorePage';
 import MyProjectsPage from './pages/MyProjectsPage';
 import AccountPage from './pages/AccountPage';
 import NotFound from './pages/NotFound';
+import { FavouritesProvider } from './context/FavouritesContext';
 import { experimentalRoutes } from '../sandbox';
 
 // ─── IA Levels ───────────────────────────────────────────────────────────────
@@ -71,11 +72,13 @@ const App: React.FC = () => {
     <IntlProvider locale="en" messages={{}}>
       <BrowserRouter>
         <EchoesProvider>
-          <ThemeProvider theme="dark" asChild>
-          <div style={{ isolation: 'isolate', position: 'relative' }}>
-            <AppShell />
-          </div>
-          </ThemeProvider>
+          <FavouritesProvider>
+            <ThemeProvider theme="dark" asChild>
+              <div style={{ isolation: 'isolate', position: 'relative' }}>
+                <AppShell />
+              </div>
+            </ThemeProvider>
+          </FavouritesProvider>
         </EchoesProvider>
       </BrowserRouter>
     </IntlProvider>

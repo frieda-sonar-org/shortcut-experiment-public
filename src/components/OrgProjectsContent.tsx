@@ -1,4 +1,5 @@
 import type { Project } from '../data/orgs';
+import { useFavourites } from '../context/FavouritesContext';
 import { ProjectCard } from './ProjectCard';
 
 interface OrgProjectsContentProps {
@@ -10,6 +11,9 @@ interface OrgProjectsContentProps {
 // To extend (search bar, sort controls, etc.): add them here above the card list.
 
 export function OrgProjectsContent({ projects }: OrgProjectsContentProps) {
+  const { isStarred, toggleStar } = useFavourites();
+  const projectKey = (p: Project) => `${p.orgId}-${p.id}`;
+
   if (projects.length === 0) {
     return (
       <div style={{
@@ -31,8 +35,16 @@ export function OrgProjectsContent({ projects }: OrgProjectsContentProps) {
       gap: 'var(--echoes-dimension-space-200)',
     }}>
       {projects.map(project => (
-        <ProjectCard key={project.id} project={project} />
+        <ProjectCard
+          key={project.id}
+          project={project}
+          isStarred={isStarred(projectKey(project))}
+          onToggleStar={() => toggleStar(projectKey(project))}
+        />
       ))}
+      <div style={{ fontSize: 'var(--echoes-font-size-30)', color: 'var(--echoes-color-text-default)', textAlign: 'center' }}>
+        {projects.length} of {projects.length} shown
+      </div>
     </div>
   );
 }

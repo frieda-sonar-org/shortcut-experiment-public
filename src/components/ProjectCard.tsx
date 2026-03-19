@@ -1,4 +1,4 @@
-import { Badge, ButtonIcon, IconCheckCircle, IconDash, IconStar, IconX, RatingBadge } from '@sonarsource/echoes-react';
+import { Badge, IconCheckCircle, IconDash, IconX, RatingBadge } from '@sonarsource/echoes-react';
 import { Link } from 'react-router-dom';
 import CoverageIndicator from './CoverageIndicator';
 import type { Project, QualityGateStatus, RatingMetric } from '../data/orgs';
@@ -139,13 +139,30 @@ export function ProjectCard({ project, showOrgContext = false, isStarred = false
         padding: 'var(--echoes-dimension-space-200) var(--echoes-dimension-space-300)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--echoes-dimension-space-100)' }}>
-          <ButtonIcon
-            Icon={IconStar}
-            ariaLabel={isStarred ? 'Remove from favourites' : 'Add to favourites'}
-            size="small"
-            variety={isStarred ? 'primary-ghost' : 'default-ghost'}
+          <button
+            aria-label={isStarred ? 'Remove from favourites' : 'Add to favourites'}
             onClick={onToggleStar}
-          />
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: '2px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: isStarred ? 'var(--echoes-color-icon-warning)' : 'var(--echoes-color-icon-subtle)',
+            }}
+          >
+            {isStarred ? (
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" aria-hidden="true">
+                <path d="M8 .75l1.93 3.91 4.32.63-3.12 3.04.74 4.29L8 10.51l-3.87 2.04.74-4.3L1.75 5.29l4.32-.63z"/>
+              </svg>
+            ) : (
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round" aria-hidden="true">
+                <path d="M8 .75l1.93 3.91 4.32.63-3.12 3.04.74 4.29L8 10.51l-3.87 2.04.74-4.3L1.75 5.29l4.32-.63z"/>
+              </svg>
+            )}
+          </button>
           {/* Org context: "OrgName / " prefix linking to org page */}
           {showOrgContext && (
             <>
