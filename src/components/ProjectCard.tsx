@@ -112,9 +112,11 @@ interface ProjectCardProps {
   project: Project;
   /** When true, shows "OrgId / ProjectName" in the header (used on My Projects page) */
   showOrgContext?: boolean;
+  isStarred?: boolean;
+  onToggleStar?: () => void;
 }
 
-export function ProjectCard({ project, showOrgContext = false }: ProjectCardProps) {
+export function ProjectCard({ project, showOrgContext = false, isStarred = false, onToggleStar }: ProjectCardProps) {
   const projectUrl = `/project/overview?id=${project.orgId}-${project.id}`;
 
   const languageDisplay = project.languages
@@ -139,9 +141,10 @@ export function ProjectCard({ project, showOrgContext = false }: ProjectCardProp
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--echoes-dimension-space-100)' }}>
           <ButtonIcon
             Icon={IconStar}
-            ariaLabel={project.starred ? 'Remove from favourites' : 'Add to favourites'}
+            ariaLabel={isStarred ? 'Remove from favourites' : 'Add to favourites'}
             size="small"
-            variety="default-ghost"
+            variety={isStarred ? 'primary-ghost' : 'default-ghost'}
+            onClick={onToggleStar}
           />
           {/* Org context: "OrgName / " prefix linking to org page */}
           {showOrgContext && (

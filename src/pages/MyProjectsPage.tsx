@@ -1,4 +1,5 @@
-import { ButtonIcon, IconArrowDown, IconCheckCircle, IconHome, IconX, Layout, RatingBadge } from '@sonarsource/echoes-react';
+import { Button, ButtonIcon, IconArrowDown, IconCheckCircle, IconHome, IconX, Layout, RatingBadge } from '@sonarsource/echoes-react';
+import { useState } from 'react';
 import { getAllProjects } from '../data/orgs';
 import type { Project, Rating } from '../data/orgs';
 import { ProjectCard } from '../components/ProjectCard';
@@ -221,19 +222,76 @@ function Toolbar({ count }: { count: number }) {
 
 export default function MyProjectsPage() {
   const projects = getAllProjects();
+  const projectKey = (p: Project) => `${p.orgId}-${p.id}`;
+
+  const [starredIds, setStarredIds] = useState<Set<string>>(() => new Set());
+
+  const toggleStar = (key: string) => {
+    setStarredIds(prev => {
+      const next = new Set(prev);
+      next.has(key) ? next.delete(key) : next.add(key);
+      return next;
+    });
+  };
+
+  const favourites = projects.filter(p => starredIds.has(projectKey(p)));
+
+  if (favourites.length === 0) {
+    return (
+      <Layout.ContentGrid>
+        <Layout.PageGrid>
+          <Layout.PageContent>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: 'var(--echoes-dimension-space-200)',
+              padding: 'var(--echoes-dimension-space-800) var(--echoes-dimension-space-400)',
+              textAlign: 'center',
+            }}>
+              <span style={{
+                fontSize: 'var(--echoes-font-size-40)',
+                fontWeight: 'var(--echoes-font-weight-semi-bold)',
+                color: 'var(--echoes-color-text-default)',
+              }}>
+                You don't have any favorite projects yet.
+              </span>
+              <span style={{
+                fontSize: 'var(--echoes-font-size-30)',
+                color: 'var(--echoes-color-text-default)',
+              }}>
+                Here is how to add projects to this page
+              </span>
+              <div style={{ display: 'flex', gap: 'var(--echoes-dimension-space-200)', flexWrap: 'wrap', justifyContent: 'center', marginTop: 'var(--echoes-dimension-space-200)' }}>
+                <Button variety="default">Analyze new project</Button>
+                <Button variety="default" suffix={<IconArrowDown />}>Favorite projects from your orgs</Button>
+                <Button variety="default">Favorite public projects</Button>
+              </div>
+            </div>
+          </Layout.PageContent>
+        </Layout.PageGrid>
+      </Layout.ContentGrid>
+    );
+  }
 
   return (
     <Layout.ContentGrid>
       <Layout.AsideLeft size="medium">
-        <Filters projects={projects} />
+        <Filters projects={favourites} />
       </Layout.AsideLeft>
 
       <Layout.PageGrid>
         <Layout.PageContent>
-          <Toolbar count={projects.length} />
+          <Toolbar count={favourites.length} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--echoes-dimension-space-200)' }}>
-            {projects.map(p => (
-              <ProjectCard key={`${p.orgId}-${p.id}`} project={p} showOrgContext />
+            {favourites.map(p => (
+              <ProjectCard
+                key={projectKey(p)}
+                project={p}
+                showOrgContext
+                isStarred
+                onToggleStar={() => toggleStar(projectKey(p))}
+              />
             ))}
           </div>
         </Layout.PageContent>
