@@ -1,6 +1,14 @@
 import { ReactNode } from 'react';
 import { Badge, Button, Layout } from '@sonarsource/echoes-react';
 
+export type PlanType = 'free' | 'team' | 'enterprise';
+
+const PLAN_CONFIG: Record<PlanType, { label: string; variety: 'info' | 'success' | 'highlight' }> = {
+  free:       { label: 'Free Plan',       variety: 'info' },
+  team:       { label: 'Team Plan',       variety: 'success' },
+  enterprise: { label: 'Enterprise Plan', variety: 'highlight' },
+};
+
 function GitHubIcon() {
   return (
     <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor" aria-hidden="true">
@@ -19,6 +27,8 @@ interface PageContentHeaderProps {
   breadcrumbs?: BreadcrumbItem[];
   /** Optional badge shown inline next to the title (e.g. "Public", "Beta") */
   badge?: ReactNode;
+  /** Optional plan tier badge: 'free' | 'team' | 'enterprise' */
+  plan?: PlanType;
   /** Optional metadata line below the title (e.g. "Created by user · Last analysis 2h ago") */
   metadata?: ReactNode;
   /** If provided, renders a "View on GitHub" button in the actions area */
@@ -29,9 +39,20 @@ export function PageContentHeader({
   title,
   breadcrumbs,
   badge,
+  plan,
   metadata,
   githubUrl,
 }: PageContentHeaderProps) {
+  const planBadge = plan ? (
+    <Badge variety={PLAN_CONFIG[plan].variety} size="small">
+      {PLAN_CONFIG[plan].label}
+    </Badge>
+  ) : null;
+
+  const suffix = (badge || planBadge) ? (
+    <>{badge}{planBadge}</>
+  ) : undefined;
+
   return (
     <Layout.ContentHeader
       hasDivider
@@ -41,7 +62,7 @@ export function PageContentHeader({
         ) : undefined
       }
       title={
-        <Layout.ContentHeader.Title suffix={badge}>
+        <Layout.ContentHeader.Title suffix={suffix}>
           {title}
         </Layout.ContentHeader.Title>
       }

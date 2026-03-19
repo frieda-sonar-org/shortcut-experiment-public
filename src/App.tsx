@@ -10,6 +10,7 @@ import {
 import { GlobalNav } from './components/GlobalNav';
 import { SidebarNav } from './components/SidebarNav';
 import { OrgSidebarNav } from './components/OrgSidebarNav';
+import { AccountSidebarNav } from './components/AccountSidebarNav';
 import PullRequestsPage from './pages/PullRequestsPage';
 import MyPullRequestsPage from './pages/MyPullRequestsPage';
 import PROverview from './pages/PROverview';
@@ -17,30 +18,45 @@ import PRFilesView from './pages/PRFilesView';
 import OrganizationPage from './pages/OrganizationPage';
 import ProjectPage from './pages/ProjectPage';
 import ExplorePage from './pages/ExplorePage';
+import AccountPage from './pages/AccountPage';
 import NotFound from './pages/NotFound';
 import { experimentalRoutes } from '../sandbox';
 
+// ─── IA Levels ───────────────────────────────────────────────────────────────
+// TOP LEVEL     : /explore, /projects, /issues, /portfolios  → no sidebar
+// ORG LEVEL     : /organizations/*                           → OrgSidebarNav
+// PROJECT LEVEL : /project/*                                 → SidebarNav
+// ACCOUNT LEVEL : /account/*                                 → AccountSidebarNav
+
 function AppShell() {
-  const location = useLocation();
-  const isOrgPage = location.pathname.startsWith('/organizations');
-  const isProjectPage = location.pathname.startsWith('/project');
+  const { pathname } = useLocation();
+
+  const isOrgLevel     = pathname.startsWith('/organizations');
+  const isProjectLevel = pathname.startsWith('/project');
+  const isAccountLevel = pathname.startsWith('/account');
 
   return (
     <Layout>
       <GlobalNav />
 
-      {isOrgPage && <OrgSidebarNav />}
-      {isProjectPage && <SidebarNav />}
+      {isOrgLevel     && <OrgSidebarNav />}
+      {isProjectLevel && <SidebarNav />}
+      {isAccountLevel && <AccountSidebarNav />}
 
       <Routes>
         <Route path="/" element={<Navigate to="/explore" replace />} />
+        {/* TOP LEVEL */}
         <Route path="/explore" element={<ExplorePage />} />
         <Route path="/pull-requests" element={<PullRequestsPage />} />
         <Route path="/my-pull-requests" element={<MyPullRequestsPage />} />
         <Route path="/overview/:id" element={<PROverview />} />
         <Route path="/review/:id" element={<PRFilesView />} />
+        {/* ORG LEVEL */}
         <Route path="/organizations/:orgId/*" element={<OrganizationPage />} />
+        {/* PROJECT LEVEL */}
         <Route path="/project/*" element={<ProjectPage />} />
+        {/* ACCOUNT LEVEL */}
+        <Route path="/account/*" element={<AccountPage />} />
         {experimentalRoutes}
         <Route path="*" element={<NotFound />} />
       </Routes>

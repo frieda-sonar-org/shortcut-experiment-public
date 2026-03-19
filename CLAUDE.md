@@ -40,6 +40,9 @@ Before working with Echoes components, read:
 - `.claude/skills/echoes-components/SKILL.md` — how to look up correct component props
 - `.claude/skills/using-echoes-layout/SKILL.md` — correct Echoes layout hierarchy
 
+Before working on org-level project listing, content slots, or ProjectCard data, read:
+- `.claude/skills/org-projects/SKILL.md` — data schema, slot architecture, how to add projects/sections
+
 ## Project Structure
 
 ```
