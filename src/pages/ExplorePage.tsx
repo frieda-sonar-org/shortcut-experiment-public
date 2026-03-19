@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Badge, IconCheckCircle, Layout } from '@sonarsource/echoes-react';
 import CoverageIndicator from '../components/CoverageIndicator';
 
@@ -265,6 +266,8 @@ function ProjectCard({ project }: { project: Project }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function ExplorePage() {
+  useEffect(() => { document.title = 'Open Source Projects - My Account - SonarQube Cloud'; }, []);
+
   return (
     <Layout.ContentGrid>
       <Layout.PageGrid>

@@ -1,7 +1,9 @@
+import { useEffect } from 'react';
 import { Badge, Layout } from '@sonarsource/echoes-react';
 import { Navigate, useParams } from 'react-router-dom';
 import { PageContentHeader, PlanType } from '../components/PageContentHeader';
 import { OrgProjectsContent } from '../components/OrgProjectsContent';
+import { ProjectFilters } from '../components/ProjectFilters';
 import { getOrg } from '../data/orgs';
 
 const ORG_PLANS: Record<string, PlanType> = {
@@ -29,42 +31,6 @@ function ContentPlaceholder() {
   );
 }
 
-// ─── Filters slot ────────────────────────────────────────────────────────────
-// TODO: Replace filter groups below with real filter controls.
-function Filters() {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--echoes-dimension-space-300)' }}>
-      {/* Filter group placeholder — duplicate and rename as needed */}
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 'var(--echoes-dimension-space-100)',
-      }}>
-        <div style={{
-          fontSize: '0.75rem',
-          fontWeight: 600,
-          textTransform: 'uppercase',
-          letterSpacing: '0.05em',
-          color: 'var(--echoes-color-text-subdued)',
-        }}>
-          Filter group
-        </div>
-        <div style={{
-          height: '6rem',
-          border: '1px dashed var(--echoes-color-border-weak)',
-          borderRadius: 'var(--echoes-border-radius-200)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'var(--echoes-color-text-subdued)',
-          fontSize: '0.875rem',
-        }}>
-          Filters go here
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // Derive a human-readable label from a URL segment (e.g. "quality-gates" → "Quality gates")
 function sectionLabel(segment: string): string {
@@ -76,6 +42,8 @@ export default function OrganizationPage() {
   const { orgId, '*': subPath } = useParams<{ orgId: string; '*': string }>();
   const org = orgId ?? 'organization';
   const orgData = getOrg(org);
+
+  useEffect(() => { document.title = `Projects - ${org} - SonarQube Cloud`; }, [org]);
 
   // No sub-path → redirect to the Projects default page
   if (!subPath) {
@@ -100,9 +68,9 @@ export default function OrganizationPage() {
         githubUrl="https://github.com"
       />
 
-      {section === 'projects' && (
+      {section === 'projects' && orgData && (
         <Layout.AsideLeft size="medium">
-          <Filters />
+          <ProjectFilters projects={orgData.projects} />
         </Layout.AsideLeft>
       )}
 

@@ -1,9 +1,12 @@
+import { useEffect } from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { Layout } from '@sonarsource/echoes-react';
 
 // ─── Page ────────────────────────────────────────────────────────────────────
 export default function AccountPage() {
   const { '*': subPath } = useParams<{ '*': string }>();
+
+  useEffect(() => { document.title = 'My account - My account - SonarQube Cloud'; }, []);
 
   // No sub-path → redirect to Profile by default
   if (!subPath) {

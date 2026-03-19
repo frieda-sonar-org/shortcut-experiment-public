@@ -1,5 +1,7 @@
+import { useEffect } from 'react';
 import { Layout } from '@sonarsource/echoes-react';
 import { useSearchParams } from 'react-router-dom';
+import { getAllProjects } from '../data/orgs';
 
 // ─── Content slot ─────────────────────────────────────────────────────────────
 // Replace this component with your actual project content.
@@ -23,6 +25,11 @@ function PageContent() {
 export default function OrgProjectDetailPage() {
   const [searchParams] = useSearchParams();
   const projectId = searchParams.get('id') ?? 'Project';
+  const allProjects = getAllProjects();
+  const project = allProjects.find(p => `${p.orgId}-${p.id}` === projectId);
+  const projectName = project?.name ?? projectId;
+
+  useEffect(() => { document.title = `Overview - ${projectName} - SonarQube Cloud`; }, [projectName]);
 
   return (
     <Layout.ContentGrid>
