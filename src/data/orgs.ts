@@ -15,10 +15,12 @@ export interface ProjectMetrics {
   reliability: RatingMetric;
   maintainability: RatingMetric;
   hotspots: RatingMetric;
-  /** undefined = don't show the column; null = show "—" dash */
-  dependencyRisks?: null;
+  /** undefined = don't show; null = show "—" dash; object = show rating + value */
+  dependencyRisks?: { rating: Rating; value: string } | null;
+  /** Optional coverage percentage — shown with CoverageIndicator (not inverted) */
+  coverage?: { percentage: number };
   duplications: {
-    percentage: number; // numeric — fed to CoverageIndicator
+    percentage: number;
   };
 }
 
@@ -194,8 +196,38 @@ export const ORGS: OrgData[] = [
       },
     ],
   },
+  {
+    id: 'sonar-ux-testing-org',
+    name: 'Sonar-UX-Testing-Org',
+    projects: [
+      {
+        id: 'autosecurity',
+        name: 'autosecurity',
+        orgId: 'sonar-ux-testing-org',
+        visibility: 'private',
+        starred: true,
+        lastAnalysis: '19/03/2026, 01:13',
+        linesOfCode: '6.9k',
+        languages: ['Python', 'Shell'],
+        qualityGate: 'failed',
+        metrics: {
+          security:        { rating: 'A', value: '0' },
+          reliability:     { rating: 'A', value: '0' },
+          maintainability: { rating: 'A', value: '15' },
+          hotspots:        { rating: 'A', value: '100%' },
+          dependencyRisks: { rating: 'C', value: '36' },
+          coverage:        { percentage: 70.5 },
+          duplications:    { percentage: 0.3 },
+        },
+      },
+    ],
+  },
 ];
 
 export function getOrg(orgId: string): OrgData | undefined {
   return ORGS.find(o => o.id === orgId);
+}
+
+export function getAllProjects(): Project[] {
+  return ORGS.flatMap(o => o.projects);
 }

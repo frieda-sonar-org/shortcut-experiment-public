@@ -16,8 +16,9 @@ import MyPullRequestsPage from './pages/MyPullRequestsPage';
 import PROverview from './pages/PROverview';
 import PRFilesView from './pages/PRFilesView';
 import OrganizationPage from './pages/OrganizationPage';
-import ProjectPage from './pages/ProjectPage';
+import OrgProjectDetailPage from './pages/OrgProjectDetailPage';
 import ExplorePage from './pages/ExplorePage';
+import MyProjectsPage from './pages/MyProjectsPage';
 import AccountPage from './pages/AccountPage';
 import NotFound from './pages/NotFound';
 import { experimentalRoutes } from '../sandbox';
@@ -32,20 +33,21 @@ function AppShell() {
   const { pathname } = useLocation();
 
   const isOrgLevel     = pathname.startsWith('/organizations');
-  const isProjectLevel = pathname.startsWith('/project');
-  const isAccountLevel = pathname.startsWith('/account');
+  const isProjectLevel = pathname.startsWith('/project/');
+  const isAccountLevel      = pathname.startsWith('/account');
 
   return (
     <Layout>
       <GlobalNav />
 
-      {isOrgLevel     && <OrgSidebarNav />}
+      {isOrgLevel && <OrgSidebarNav />}
       {isProjectLevel && <SidebarNav />}
       {isAccountLevel && <AccountSidebarNav />}
 
       <Routes>
         <Route path="/" element={<Navigate to="/explore" replace />} />
         {/* TOP LEVEL */}
+        <Route path="/projects" element={<MyProjectsPage />} />
         <Route path="/explore" element={<ExplorePage />} />
         <Route path="/pull-requests" element={<PullRequestsPage />} />
         <Route path="/my-pull-requests" element={<MyPullRequestsPage />} />
@@ -54,7 +56,7 @@ function AppShell() {
         {/* ORG LEVEL */}
         <Route path="/organizations/:orgId/*" element={<OrganizationPage />} />
         {/* PROJECT LEVEL */}
-        <Route path="/project/*" element={<ProjectPage />} />
+        <Route path="/project/*" element={<OrgProjectDetailPage />} />
         {/* ACCOUNT LEVEL */}
         <Route path="/account/*" element={<AccountPage />} />
         {experimentalRoutes}

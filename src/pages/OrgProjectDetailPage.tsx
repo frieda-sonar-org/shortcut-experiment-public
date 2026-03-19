@@ -20,7 +20,7 @@ function PageContent() {
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
-export default function ProjectPage() {
+export default function OrgProjectDetailPage() {
   const [searchParams] = useSearchParams();
   const projectId = searchParams.get('id') ?? 'Project';
 

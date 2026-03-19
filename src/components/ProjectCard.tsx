@@ -30,23 +30,55 @@ function MetricCell({ metric, label }: { metric: RatingMetric; label: string }) 
           {metric.value}
         </span>
       </div>
-      <span style={{ fontSize: 'var(--echoes-font-size-20)', color: 'var(--echoes-color-text-subdued)' }}>
+      <span style={{ fontSize: 'var(--echoes-font-size-20)', color: 'var(--echoes-color-text-default)' }}>
         {label}
       </span>
     </div>
   );
 }
 
-// ─── Dependency Risks column (always shows "—") ───────────────────────────────
+// ─── Dependency Risks column ──────────────────────────────────────────────────
+// Shows "—" when null, or rating + value when an object is provided.
 
-function DependencyRisksCell() {
+function DependencyRisksCell({ data }: { data: { rating: string; value: string } | null }) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--echoes-dimension-space-50)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--echoes-dimension-space-75)' }}>
-        <RatingBadge size="sm" /* no rating → renders "—" */ />
+        <RatingBadge rating={data?.rating as RatingMetric['rating'] | undefined} size="sm" />
+        {data && (
+          <span style={{
+            fontSize: 'var(--echoes-font-size-30)',
+            fontWeight: 'var(--echoes-font-weight-semi-bold)',
+            color: 'var(--echoes-color-text-default)',
+          }}>
+            {data.value}
+          </span>
+        )}
       </div>
-      <span style={{ fontSize: 'var(--echoes-font-size-20)', color: 'var(--echoes-color-text-subdued)' }}>
+      <span style={{ fontSize: 'var(--echoes-font-size-20)', color: 'var(--echoes-color-text-default)' }}>
         Dependency Risks
+      </span>
+    </div>
+  );
+}
+
+// ─── Coverage column ──────────────────────────────────────────────────────────
+
+function CoverageCell({ percentage }: { percentage: number }) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--echoes-dimension-space-50)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--echoes-dimension-space-75)' }}>
+        <CoverageIndicator percentage={percentage} />
+        <span style={{
+          fontSize: 'var(--echoes-font-size-30)',
+          fontWeight: 'var(--echoes-font-weight-semi-bold)',
+          color: 'var(--echoes-color-text-default)',
+        }}>
+          {percentage}%
+        </span>
+      </div>
+      <span style={{ fontSize: 'var(--echoes-font-size-20)', color: 'var(--echoes-color-text-default)' }}>
+        Coverage
       </span>
     </div>
   );
@@ -67,7 +99,7 @@ function DuplicationsCell({ percentage }: { percentage: number }) {
           {percentage}%
         </span>
       </div>
-      <span style={{ fontSize: 'var(--echoes-font-size-20)', color: 'var(--echoes-color-text-subdued)' }}>
+      <span style={{ fontSize: 'var(--echoes-font-size-20)', color: 'var(--echoes-color-text-default)' }}>
         Duplications
       </span>
     </div>
@@ -76,7 +108,13 @@ function DuplicationsCell({ percentage }: { percentage: number }) {
 
 // ─── Project Card ─────────────────────────────────────────────────────────────
 
-export function ProjectCard({ project }: { project: Project }) {
+interface ProjectCardProps {
+  project: Project;
+  /** When true, shows "OrgId / ProjectName" in the header (used on My Projects page) */
+  showOrgContext?: boolean;
+}
+
+export function ProjectCard({ project, showOrgContext = false }: ProjectCardProps) {
   const projectUrl = `/project/overview?id=${project.orgId}-${project.id}`;
 
   const languageDisplay = project.languages
@@ -88,6 +126,7 @@ export function ProjectCard({ project }: { project: Project }) {
       border: '1px solid var(--echoes-color-border-weak)',
       borderRadius: 'var(--echoes-border-radius-200)',
       overflow: 'hidden',
+      background: 'var(--echoes-color-surface-default)',
     }}>
 
       {/* ── Header row ── */}
@@ -104,13 +143,30 @@ export function ProjectCard({ project }: { project: Project }) {
             size="small"
             variety="default-ghost"
           />
+          {/* Org context: "OrgName / " prefix linking to org page */}
+          {showOrgContext && (
+            <>
+              <Link
+                to={`/organizations/${project.orgId}/projects`}
+                style={{
+                  fontSize: 'var(--echoes-font-size-30)',
+                  color: 'var(--echoes-color-text-accent)',
+                  fontWeight: 'var(--echoes-font-weight-semi-bold)',
+                  textDecoration: 'none',
+                }}
+              >
+                {project.orgId}
+              </Link>
+              <span style={{ fontSize: 'var(--echoes-font-size-30)', color: 'var(--echoes-color-text-subdued)', fontWeight: 'var(--echoes-font-weight-semi-bold)' }}>&nbsp;/&nbsp;</span>
+            </>
+          )}
           <Link
             to={projectUrl}
             style={{
               fontWeight: 'var(--echoes-font-weight-semi-bold)',
               color: 'var(--echoes-color-text-accent)',
               textDecoration: 'none',
-              fontSize: 'var(--echoes-font-size-40)',
+              fontSize: 'var(--echoes-font-size-30)',
             }}
           >
             {project.name}
@@ -137,10 +193,9 @@ export function ProjectCard({ project }: { project: Project }) {
           padding: '0 var(--echoes-dimension-space-300) var(--echoes-dimension-space-150)',
           paddingLeft: 'calc(var(--echoes-dimension-space-300) + 2rem)',
           fontSize: 'var(--echoes-font-size-20)',
-          color: 'var(--echoes-color-text-subdued)',
+          color: 'var(--echoes-color-text-default)',
         }}>
           <strong style={{
-            color: 'var(--echoes-color-text-default)',
             fontWeight: 'var(--echoes-font-weight-semi-bold)',
           }}>
             Last analysis:
@@ -165,15 +220,19 @@ export function ProjectCard({ project }: { project: Project }) {
           <MetricCell metric={project.metrics.reliability}     label="Reliability" />
           <MetricCell metric={project.metrics.maintainability} label="Maintainability" />
           <MetricCell metric={project.metrics.hotspots}        label="Hotspots Reviewed" />
-          {'dependencyRisks' in project.metrics && <DependencyRisksCell />}
+          {'dependencyRisks' in project.metrics && (
+            <DependencyRisksCell data={project.metrics.dependencyRisks ?? null} />
+          )}
+          {project.metrics.coverage && (
+            <CoverageCell percentage={project.metrics.coverage.percentage} />
+          )}
           <DuplicationsCell percentage={project.metrics.duplications.percentage} />
         </div>
       ) : (
-        /* Not analyzed yet */
         <div style={{
           borderTop: '1px solid var(--echoes-color-border-weak)',
           padding: 'var(--echoes-dimension-space-200) var(--echoes-dimension-space-300)',
-          color: 'var(--echoes-color-text-subdued)',
+          color: 'var(--echoes-color-text-default)',
           fontSize: 'var(--echoes-font-size-30)',
         }}>
           Your default branch has not been analyzed yet.
