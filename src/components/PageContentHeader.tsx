@@ -58,7 +58,12 @@ export function PageContentHeader({
       hasDivider
       breadcrumbs={
         breadcrumbs && breadcrumbs.length > 0 ? (
-          <Layout.ContentHeader.Breadcrumbs items={breadcrumbs} />
+          <Layout.ContentHeader.Breadcrumbs
+            items={breadcrumbs.map((item) => ({
+              ...item,
+              highlight: item.to ? 'default' : 'subtle',
+            }))}
+          />
         ) : undefined
       }
       title={

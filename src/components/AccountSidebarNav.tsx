@@ -8,9 +8,34 @@ import {
   Layout,
 } from '@sonarsource/echoes-react';
 
+function AccountAvatar() {
+  return (
+    <div style={{
+      width: '2rem', height: '2rem',
+      borderRadius: '50%',
+      backgroundColor: '#6b7280',
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      color: '#fff', fontWeight: 700, fontSize: '0.875rem', flexShrink: 0,
+    }}>
+      M
+    </div>
+  );
+}
+
 export function AccountSidebarNav() {
   return (
     <Layout.SidebarNavigation>
+      <Layout.SidebarNavigation.Header
+        avatar={
+          <span style={{ display: 'inline-flex', paddingRight: 'var(--echoes-dimension-space-150)' }}>
+            <AccountAvatar />
+          </span>
+        }
+        name="My Account"
+        qualifier="Personal account"
+        isInteractive
+      />
+
       <Layout.SidebarNavigation.Body>
 
         <Layout.SidebarNavigation.Item Icon={IconPeople} to="/account/profile" enableTooltip>

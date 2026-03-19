@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom';
 import {
   Badge,
   BadgeCounter,
@@ -16,10 +17,43 @@ import {
   IconTarget,
   Layout,
 } from '@sonarsource/echoes-react';
+import { getAllProjects } from '../data/orgs';
+
+function ProjectAvatar({ letter, color = '#6b7280' }: Readonly<{ letter: string; color?: string }>) {
+  return (
+    <div style={{
+      width: '2rem', height: '2rem',
+      borderRadius: '6px',
+      backgroundColor: color,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      color: '#fff', fontWeight: 700, fontSize: '0.875rem', flexShrink: 0,
+    }}>
+      {letter}
+    </div>
+  );
+}
 
 export function SidebarNav() {
+  const { search } = useLocation();
+  const projectId = new URLSearchParams(search).get('id') ?? '';
+  const allProjects = getAllProjects();
+  const project = allProjects.find(p => `${p.orgId}-${p.id}` === projectId);
+  const projectName = project?.name ?? projectId ?? 'Project';
+  const letter = projectName.charAt(0).toUpperCase() || 'P';
+
   return (
     <Layout.SidebarNavigation>
+      <Layout.SidebarNavigation.Header
+        avatar={
+          <span style={{ display: 'inline-flex', paddingRight: 'var(--echoes-dimension-space-150)' }}>
+            <ProjectAvatar letter={letter} />
+          </span>
+        }
+        name={projectName}
+        qualifier="Project"
+        isInteractive
+      />
+
       <Layout.SidebarNavigation.Body>
 
         <Layout.SidebarNavigation.Item Icon={IconOverview} to="/project/overview" enableTooltip>

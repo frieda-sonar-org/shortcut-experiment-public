@@ -19,6 +19,7 @@ import OrganizationPage from './pages/OrganizationPage';
 import OrgProjectDetailPage from './pages/OrgProjectDetailPage';
 import ExplorePage from './pages/ExplorePage';
 import MyProjectsPage from './pages/MyProjectsPage';
+import MyIssuesPage from './pages/MyIssuesPage';
 import AccountPage from './pages/AccountPage';
 import NotFound from './pages/NotFound';
 import { FavouritesProvider } from './context/FavouritesContext';
@@ -49,6 +50,7 @@ function AppShell() {
         <Route path="/" element={<Navigate to="/explore" replace />} />
         {/* TOP LEVEL */}
         <Route path="/projects" element={<MyProjectsPage />} />
+        <Route path="/issues" element={<MyIssuesPage />} />
         <Route path="/explore" element={<ExplorePage />} />
         <Route path="/pull-requests" element={<PullRequestsPage />} />
         <Route path="/my-pull-requests" element={<MyPullRequestsPage />} />

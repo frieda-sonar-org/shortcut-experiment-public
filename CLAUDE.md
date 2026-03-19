@@ -53,9 +53,16 @@ src/
   styles.css           — Page and component CSS (custom classes using Echoes CSS vars)
 
   components/
-    GlobalNav.tsx           — Global navigation header (top bar, Echoes-based)
+    GlobalNav.tsx           — Global navigation header (top bar, Echoes-based; Upgrade button uses custom SVG)
     SidebarNav.tsx          — Project-level sidebar (Overview, Analysis group, PR/Branches counts)
     OrgSidebarNav.tsx       — Organisation-level sidebar (Projects, Issues, Members, Billing, Settings)
+    AccountSidebarNav.tsx   — Account-level sidebar
+    PageContentHeader.tsx   — Org-level content header (title, breadcrumbs, plan badge, metadata)
+    ProjectCard.tsx         — Project card (quality gate, metrics, star/favourite toggle, org context link)
+    ProjectFilters.tsx      — Shared filter panel (Quality Gate, Reliability, Security, Security Review,
+                              Maintainability, Coverage, Duplications, Size, Languages, Tags); used by
+                              both OrganizationPage and MyProjectsPage
+    OrgProjectsContent.tsx  — Renders a list of ProjectCards for an org's projects tab
     PRSidebar.tsx           — PR detail navigation (Overview / Summary / Code Review / Issues)
     PRSelectorDropdown.tsx  — Branch/PR selector dropdown
     PRFileGroups.tsx        — File groups left panel (used in PRFilesView)
@@ -64,16 +71,27 @@ src/
     CoverageIndicator.tsx   — Donut chart for coverage percentage
     InlineComment.tsx       — Inline comment input row
 
+  context/
+    FavouritesContext.tsx   — Shared starred/favourite state (starredIds, toggleStar, isStarred);
+                              provided at app root so starring on org page syncs to My Projects
+
   pages/
+    MyProjectsPage.tsx      — Favourited projects only; empty state when nothing starred;
+                              uses ProjectFilters + ProjectCard with showOrgContext
+    ExplorePage.tsx         — Explore / open source projects
+    OrganizationPage.tsx    — Organisation template (OrgSidebarNav + PageContentHeader +
+                              ProjectFilters aside + OrgProjectsContent)
+    OrgProjectDetailPage.tsx — Project detail placeholder (Overview tab)
+    AccountPage.tsx         — Account settings placeholder
     PullRequestsPage.tsx    — PR list (flat table: Title, Quality Gate, Author, Last Updated, Commit ID)
     MyPullRequestsPage.tsx  — My Pull Requests (collapsible inbox sections)
     PROverview.tsx          — PR overview (metrics dashboard, security snapshot)
     PRFilesView.tsx         — Two-column files view (PRSidebar + file groups + diffs)
-    OrganizationPage.tsx    — Organisation template (OrgSidebarNav + ContentHeader + AsideLeft filters + PageContent)
     NotFound.tsx            — 404 fallback
 
   data/
     pr-info.ts         — Demo PR data (PRInfo objects, getPRInfo(), getAllPRs())
+    orgs.ts            — Org and project data (OrgData, Project, getOrg(), getAllProjects())
 
   types/
     PRFileTypes.ts     — TypeScript types (FileGroup, FileChange, FileChangeDetail, CodeChange)
@@ -95,13 +113,33 @@ scripts/
 
 | Path | Component | Description |
 |------|-----------|-------------|
+| `/projects` | `MyProjectsPage` | Favourited projects (empty state when none starred) |
+| `/explore` | `ExplorePage` | Explore / open source projects |
 | `/pull-requests` | `PullRequestsPage` | PR list table |
 | `/my-pull-requests` | `MyPullRequestsPage` | Inbox-style PR list |
 | `/overview/:id` | `PROverview` | PR metrics dashboard |
 | `/review/:id` | `PRFilesView` | File diffs review view |
-| `/organizations/:id` | `OrganizationPage` | Organisation template (sidebar + filters + content) |
+| `/organizations/:orgId/*` | `OrganizationPage` | Organisation template (sidebar + filters + content) |
+| `/project/*` | `OrgProjectDetailPage` | Project detail (id via `?id=orgId-projectId`) |
+| `/account/*` | `AccountPage` | Account settings |
 
-**Sidebar switching:** `App.tsx` renders `OrgSidebarNav` for `/organizations/*` routes and `SidebarNav` for all other routes.
+**Sidebar switching:** `App.tsx` renders `OrgSidebarNav` for `/organizations/*`, `SidebarNav` for `/project/*`, and `AccountSidebarNav` for `/account/*`.
+
+## Page Titles
+
+Each page sets `document.title` via `useEffect`. Convention: `Section - Context - SonarQube Cloud`
+
+| Page | Title |
+|------|-------|
+| My Projects | `Projects - My Account - SonarQube Cloud` |
+| Explore | `Open Source Projects - My Account - SonarQube Cloud` |
+| Organization | `Projects - {orgId} - SonarQube Cloud` |
+| Project detail | `Overview - {projectName} - SonarQube Cloud` |
+| Account | `My account - My account - SonarQube Cloud` |
+
+## Favourites
+
+`FavouritesContext` (provided in `App.tsx` outside `ThemeProvider`) holds a `Set<string>` of starred project keys (`${orgId}-${projectId}`). Star buttons on `ProjectCard` call `toggleStar`; `MyProjectsPage` filters `getAllProjects()` by `isStarred`. **Do not place `FavouritesProvider` between `ThemeProvider` and its `asChild` div** — this breaks dark mode.
 
 ## Sandbox Workflow
 
