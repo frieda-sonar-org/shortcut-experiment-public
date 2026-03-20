@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Layout } from '@sonarsource/echoes-react';
 import { useSearchParams } from 'react-router-dom';
 import { getAllProjects } from '../data/orgs';
+import { PageContentHeader } from '../components/PageContentHeader';
 
 // ─── Content slot ─────────────────────────────────────────────────────────────
 // Replace this component with your actual project content.
@@ -28,13 +29,26 @@ export default function OrgProjectDetailPage() {
   const allProjects = getAllProjects();
   const project = allProjects.find(p => `${p.orgId}-${p.id}` === projectId);
   const projectName = project?.name ?? projectId;
+  const orgId = project?.orgId ?? projectId.split('-')[0];
 
   useEffect(() => { document.title = `Overview - ${projectName} - SonarQube Cloud`; }, [projectName]);
 
+  const metadataParts = [
+    project?.lastAnalysis ? `Last analysis: ${project.lastAnalysis}` : null,
+    project?.linesOfCode ? `${project.linesOfCode} Lines of Code` : null,
+    project?.languages?.join(', ') ?? null,
+  ].filter(Boolean).join(' · ');
+
   return (
     <Layout.ContentGrid>
-      <Layout.ContentHeader
-        title={<Layout.ContentHeader.Title>{projectId}</Layout.ContentHeader.Title>}
+      <PageContentHeader
+        title={projectName}
+        breadcrumbs={[
+          { linkElement: orgId, to: `/organizations/${orgId}/projects` },
+          { linkElement: projectName },
+        ]}
+        metadata={metadataParts || undefined}
+        githubUrl="https://github.com"
       />
       <Layout.PageGrid>
         <Layout.PageContent>

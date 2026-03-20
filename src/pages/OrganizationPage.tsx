@@ -1,14 +1,15 @@
-import { useEffect } from 'react';
-import { Badge, Layout } from '@sonarsource/echoes-react';
+import { useEffect, useState } from 'react';
+import { Layout } from '@sonarsource/echoes-react';
 import { Navigate, useParams } from 'react-router-dom';
 import { PageContentHeader, PlanType } from '../components/PageContentHeader';
 import { OrgProjectsContent } from '../components/OrgProjectsContent';
-import { ProjectFilters } from '../components/ProjectFilters';
+import { applyProjectFilters, emptyProjectFilters, ProjectFilterState, ProjectFilters } from '../components/ProjectFilters';
 import { getOrg } from '../data/orgs';
 
 const ORG_PLANS: Record<string, PlanType> = {
-  'product-design-ux-org': 'enterprise',
-  'lisa-lee-sonar':        'team',
+  'product-design-ux-org':    'team',
+  'lisa-lee-sonar':           'free',
+  'enterprise-platform-org':  'enterprise',
 };
 
 // ─── Content slot (generic placeholder) ──────────────────────────────────────
@@ -22,7 +23,7 @@ function ContentPlaceholder() {
       alignItems: 'center',
       justifyContent: 'center',
       height: '200px',
-      color: 'var(--echoes-color-text-subdued)',
+      color: 'var(--echoes-color-text-subtle)',
       border: '1px dashed var(--echoes-color-border-weak)',
       borderRadius: 'var(--echoes-border-radius-200)',
     }}>
@@ -43,6 +44,8 @@ export default function OrganizationPage() {
   const org = orgId ?? 'organization';
   const orgData = getOrg(org);
 
+  const [filters, setFilters] = useState<ProjectFilterState>(emptyProjectFilters);
+
   useEffect(() => { document.title = `Projects - ${org} - SonarQube Cloud`; }, [org]);
 
   // No sub-path → redirect to the Projects default page
@@ -54,6 +57,8 @@ export default function OrganizationPage() {
   const section = subPath.split('?')[0].split('/')[0] || 'projects';
   const label = sectionLabel(section);
 
+  const filteredProjects = orgData ? applyProjectFilters(orgData.projects, filters) : [];
+
   return (
     <Layout.ContentGrid>
       <PageContentHeader
@@ -62,7 +67,6 @@ export default function OrganizationPage() {
           { linkElement: org, to: `/organizations/${org}/projects` },
           { linkElement: label },
         ]}
-        badge={<Badge variety="neutral" size="small">Public</Badge>}
         plan={ORG_PLANS[org]}
         metadata="Created by lisalee00 · Last analysis 2 hours ago"
         githubUrl="https://github.com"
@@ -70,15 +74,14 @@ export default function OrganizationPage() {
 
       {section === 'projects' && orgData && (
         <Layout.AsideLeft size="medium">
-          <ProjectFilters projects={orgData.projects} />
+          <ProjectFilters allProjects={orgData.projects} filters={filters} onChange={setFilters} />
         </Layout.AsideLeft>
       )}
 
       <Layout.PageGrid>
         <Layout.PageContent>
-          {/* ── Slot routing: map section → content component ── */}
           {section === 'projects' && orgData
-            ? <OrgProjectsContent projects={orgData.projects} />
+            ? <OrgProjectsContent projects={filteredProjects} totalProjects={orgData.projects.length} />
             : <ContentPlaceholder />
           }
         </Layout.PageContent>

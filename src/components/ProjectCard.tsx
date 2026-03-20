@@ -5,7 +5,7 @@ import type { Project, QualityGateStatus, RatingMetric } from '../data/orgs';
 
 // ─── Quality Gate badge ───────────────────────────────────────────────────────
 
-function QualityGateBadge({ status }: { status: QualityGateStatus }) {
+function QualityGateBadge({ status }: Readonly<{ status: QualityGateStatus }>) {
   if (status === 'passed') {
     return <Badge variety="success" size="medium" IconLeft={IconCheckCircle}>Passed</Badge>;
   }
@@ -17,7 +17,7 @@ function QualityGateBadge({ status }: { status: QualityGateStatus }) {
 
 // ─── Single metric column ─────────────────────────────────────────────────────
 
-function MetricCell({ metric, label }: { metric: RatingMetric; label: string }) {
+function MetricCell({ metric, label }: Readonly<{ metric: RatingMetric; label: string }>) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--echoes-dimension-space-50)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--echoes-dimension-space-75)' }}>
@@ -40,7 +40,7 @@ function MetricCell({ metric, label }: { metric: RatingMetric; label: string }) 
 // ─── Dependency Risks column ──────────────────────────────────────────────────
 // Shows "—" when null, or rating + value when an object is provided.
 
-function DependencyRisksCell({ data }: { data: { rating: string; value: string } | null }) {
+function DependencyRisksCell({ data }: Readonly<{ data: { rating: string; value: string } | null }>) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--echoes-dimension-space-50)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--echoes-dimension-space-75)' }}>
@@ -64,7 +64,7 @@ function DependencyRisksCell({ data }: { data: { rating: string; value: string }
 
 // ─── Coverage column ──────────────────────────────────────────────────────────
 
-function CoverageCell({ percentage }: { percentage: number }) {
+function CoverageCell({ percentage }: Readonly<{ percentage: number }>) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--echoes-dimension-space-50)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--echoes-dimension-space-75)' }}>
@@ -86,7 +86,7 @@ function CoverageCell({ percentage }: { percentage: number }) {
 
 // ─── Duplications column ──────────────────────────────────────────────────────
 
-function DuplicationsCell({ percentage }: { percentage: number }) {
+function DuplicationsCell({ percentage }: Readonly<{ percentage: number }>) {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--echoes-dimension-space-50)' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--echoes-dimension-space-75)' }}>
@@ -116,11 +116,12 @@ interface ProjectCardProps {
   onToggleStar?: () => void;
 }
 
-export function ProjectCard({ project, showOrgContext = false, isStarred = false, onToggleStar }: ProjectCardProps) {
+export function ProjectCard({ project, showOrgContext = false, isStarred = false, onToggleStar }: Readonly<ProjectCardProps>) {
   const projectUrl = `/project/overview?id=${project.orgId}-${project.id}`;
 
+  const langSuffix = (project.languages?.length ?? 0) > 2 ? ', ...' : '';
   const languageDisplay = project.languages
-    ? project.languages.slice(0, 2).join(', ') + (project.languages.length > 2 ? ', ...' : '')
+    ? project.languages.slice(0, 2).join(', ') + langSuffix
     : null;
 
   return (
@@ -177,7 +178,7 @@ export function ProjectCard({ project, showOrgContext = false, isStarred = false
               >
                 {project.orgId}
               </Link>
-              <span style={{ fontSize: 'var(--echoes-font-size-30)', color: 'var(--echoes-color-text-subdued)', fontWeight: 'var(--echoes-font-weight-semi-bold)' }}>&nbsp;/&nbsp;</span>
+              <span style={{ fontSize: 'var(--echoes-font-size-30)', color: 'var(--echoes-color-text-subtle)', fontWeight: 'var(--echoes-font-weight-semi-bold)' }}>&nbsp;/&nbsp;</span>
             </>
           )}
           <Link
@@ -192,7 +193,7 @@ export function ProjectCard({ project, showOrgContext = false, isStarred = false
             {project.name}
           </Link>
           {project.tags?.includes('new') && (
-            <Badge variety="info" size="small">New</Badge>
+            <Badge variety="highlight" size="small">New</Badge>
           )}
           <Badge variety="neutral" size="small">
             {project.visibility === 'public' ? 'Public' : 'Private'}

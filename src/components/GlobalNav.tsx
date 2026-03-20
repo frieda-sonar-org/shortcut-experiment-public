@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { CURRENT_USER } from '../data/currentUser';
 import {
   Badge,
   ButtonIcon,
@@ -40,7 +41,15 @@ export function GlobalNav() {
         <Layout.GlobalNavigation.ItemsContainer>
           <Layout.GlobalNavigation.Item to="/projects">My Projects</Layout.GlobalNavigation.Item>
           <Layout.GlobalNavigation.Item to="/issues">My Issues</Layout.GlobalNavigation.Item>
-          <Layout.GlobalNavigation.Item to="/portfolios">My Portfolios</Layout.GlobalNavigation.Item>
+          <Layout.GlobalNavigation.DropdownItem
+            items={
+              <DropdownMenu.ItemLink to="/portfolios/product-design-ux">
+                Product-Design-UX
+              </DropdownMenu.ItemLink>
+            }
+          >
+            My Portfolios
+          </Layout.GlobalNavigation.DropdownItem>
           <Layout.GlobalNavigation.Item to="/explore">Explore</Layout.GlobalNavigation.Item>
         </Layout.GlobalNavigation.ItemsContainer>
       </Layout.GlobalNavigation.Primary>
@@ -105,8 +114,8 @@ export function GlobalNav() {
           ariaLabel="Account"
           avatar={
             <img
-              src="https://randomuser.me/api/portraits/men/12.jpg"
-              alt="User"
+              src={CURRENT_USER.avatarUrl}
+              alt={CURRENT_USER.displayName}
               style={{
                 borderRadius: 'var(--echoes-border-radius-200)',
                 width: 'var(--echoes-dimension-width-250)',
@@ -116,7 +125,7 @@ export function GlobalNav() {
               }}
             />
           }
-          header={{ label: 'lisalee00', helpText: 'lisa.lee@sonarsource.com' }}
+          header={{ label: CURRENT_USER.username, helpText: CURRENT_USER.email }}
           items={
             <>
               <DropdownMenu.ItemLink to="/account">My account</DropdownMenu.ItemLink>
@@ -125,7 +134,7 @@ export function GlobalNav() {
               <DropdownMenu.GroupLabel>
                 <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--echoes-dimension-space-100)' }}>
                   My Organizations
-                  <Badge variety="neutral" size="small">2</Badge>
+                  <Badge variety="neutral" size="small">3</Badge>
                 </span>
               </DropdownMenu.GroupLabel>
 
@@ -142,6 +151,13 @@ export function GlobalNav() {
                 suffix={<Badge variety="neutral" size="small">Admin</Badge>}
               >
                 lisa-lee-sonar
+              </DropdownMenu.ItemLink>
+              <DropdownMenu.ItemLink
+                to="/organizations/enterprise-platform-org/projects?sort=-analysis_date"
+                prefix={<OrgAvatar letter="E" color="#7c3aed" />}
+                suffix={<Badge variety="neutral" size="small">Admin</Badge>}
+              >
+                Enterprise-Platform-Org
               </DropdownMenu.ItemLink>
               <DropdownMenu.ItemLink to="/organizations" isMatchingFullPath>View all</DropdownMenu.ItemLink>
               <DropdownMenu.Separator />

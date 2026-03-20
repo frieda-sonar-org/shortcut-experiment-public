@@ -389,7 +389,7 @@
 }
 
 .breadcrumb-link {
-    color: var(--color-text-muted);
+    color: var(--echoes-color-text-subtle);
     text-decoration: none;
     transition: color var(--transition-base);
 }
@@ -399,7 +399,7 @@
 }
 
 .breadcrumb-separator {
-    color: var(--color-text-muted);
+    color: var(--echoes-color-text-subtle);
 }
 
 .breadcrumb-current {
@@ -549,7 +549,7 @@
     left: 12px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--echoes-color-text-subdued);
+    color: var(--echoes-color-icon-subtle);
 }
 
 .search-input {
@@ -569,7 +569,7 @@
 }
 
 .search-input::placeholder {
-    color: var(--echoes-color-text-subdued);
+    color: var(--echoes-color-text-subtle);
 }
 
 .btn-filters {
@@ -3288,4 +3288,46 @@
 
 .ai-search-button:active {
     transform: scale(0.95);
+}
+
+
+/* ─── Filter item interactive states ─────────────────────────────────────── */
+
+.filter-item {
+    background: transparent;
+    transition: background-color 0.1s ease;
+}
+
+.filter-item:hover:not(:disabled) {
+    background-color: var(--echoes-color-surface-hover);
+}
+
+.filter-item:active:not(:disabled) {
+    background-color: var(--echoes-color-surface-active);
+}
+
+.filter-item.filter-item--selected {
+    background-color: var(--echoes-color-background-selected-weak-default);
+}
+
+.filter-item.filter-item--selected:hover:not(:disabled) {
+    background-color: var(--echoes-color-background-selected-weak-hover);
+}
+
+.filter-item.filter-item--selected:active:not(:disabled) {
+    background-color: var(--echoes-color-background-selected-weak-pressed);
+}
+
+/* ─── Empty-state illustration: light/dark theme switching ─── */
+.illustration-light { display: inline-flex; }
+.illustration-dark  { display: none; }
+
+[data-color-scheme="dark"] .illustration-light,
+[data-echoes-color-scheme="dark"] .illustration-light { display: none; }
+[data-color-scheme="dark"] .illustration-dark,
+[data-echoes-color-scheme="dark"] .illustration-dark  { display: inline-flex; }
+
+@media (prefers-color-scheme: dark) {
+    .illustration-light { display: none; }
+    .illustration-dark  { display: inline-flex; }
 }

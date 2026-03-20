@@ -1,14 +1,15 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, ButtonIcon, IconArrowDown, IconHome, Layout } from '@sonarsource/echoes-react';
 import { useFavourites } from '../context/FavouritesContext';
 import { getAllProjects } from '../data/orgs';
 import type { Project } from '../data/orgs';
 import { ProjectCard } from '../components/ProjectCard';
-import { ProjectFilters } from '../components/ProjectFilters';
+import { applyProjectFilters, emptyProjectFilters, ProjectFilterState, ProjectFilters } from '../components/ProjectFilters';
+import { NoFilterResults } from '../components/NoFilterResults';
 
 // ─── Toolbar ──────────────────────────────────────────────────────────────────
 
-function Toolbar({ count }: { count: number }) {
+function Toolbar({ count }: Readonly<{ count: number }>) {
   return (
     <div style={{
       display: 'flex',
@@ -96,7 +97,10 @@ export default function MyProjectsPage() {
   const projectKey = (p: Project) => `${p.orgId}-${p.id}`;
   const { isStarred, toggleStar } = useFavourites();
 
+  const [filters, setFilters] = useState<ProjectFilterState>(emptyProjectFilters);
+
   const favourites = projects.filter(p => isStarred(projectKey(p)));
+  const filtered = applyProjectFilters(favourites, filters);
 
   if (favourites.length === 0) {
     return (
@@ -139,26 +143,30 @@ export default function MyProjectsPage() {
   return (
     <Layout.ContentGrid>
       <Layout.AsideLeft size="medium">
-        <ProjectFilters projects={favourites} />
+        <ProjectFilters allProjects={favourites} filters={filters} onChange={setFilters} />
       </Layout.AsideLeft>
 
       <Layout.PageGrid>
         <Layout.PageContent>
-          <Toolbar count={favourites.length} />
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--echoes-dimension-space-200)' }}>
-            {favourites.map(p => (
-              <ProjectCard
-                key={projectKey(p)}
-                project={p}
-                showOrgContext
-                isStarred
-                onToggleStar={() => toggleStar(projectKey(p))}
-              />
-            ))}
-            <div style={{ fontSize: 'var(--echoes-font-size-30)', color: 'var(--echoes-color-text-default)', textAlign: 'center' }}>
-              {favourites.length} of {favourites.length} shown
+          <Toolbar count={filtered.length} />
+          {filtered.length === 0 ? (
+            <NoFilterResults message="We couldn't find any results matching the selected criteria in your favorites." />
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--echoes-dimension-space-200)' }}>
+              {filtered.map(p => (
+                <ProjectCard
+                  key={projectKey(p)}
+                  project={p}
+                  showOrgContext
+                  isStarred
+                  onToggleStar={() => toggleStar(projectKey(p))}
+                />
+              ))}
+              <div style={{ fontSize: 'var(--echoes-font-size-30)', color: 'var(--echoes-color-text-default)', textAlign: 'center' }}>
+                {filtered.length} of {favourites.length} shown
+              </div>
             </div>
-          </div>
+          )}
         </Layout.PageContent>
       </Layout.PageGrid>
     </Layout.ContentGrid>

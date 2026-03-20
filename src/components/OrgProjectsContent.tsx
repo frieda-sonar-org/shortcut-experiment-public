@@ -1,31 +1,23 @@
 import type { Project } from '../data/orgs';
 import { useFavourites } from '../context/FavouritesContext';
 import { ProjectCard } from './ProjectCard';
+import { NoFilterResults } from './NoFilterResults';
 
 interface OrgProjectsContentProps {
   projects: Project[];
+  totalProjects: number;
 }
 
 // ─── Content slot: Organization › Projects ────────────────────────────────────
 // To populate: add/edit project entries in src/data/orgs.ts.
 // To extend (search bar, sort controls, etc.): add them here above the card list.
 
-export function OrgProjectsContent({ projects }: OrgProjectsContentProps) {
+export function OrgProjectsContent({ projects, totalProjects }: Readonly<OrgProjectsContentProps>) {
   const { isStarred, toggleStar } = useFavourites();
   const projectKey = (p: Project) => `${p.orgId}-${p.id}`;
 
-  if (projects.length === 0) {
-    return (
-      <div style={{
-        padding: 'var(--echoes-dimension-space-400)',
-        color: 'var(--echoes-color-text-subdued)',
-        textAlign: 'center',
-        border: '1px dashed var(--echoes-color-border-weak)',
-        borderRadius: 'var(--echoes-border-radius-200)',
-      }}>
-        No projects in this organization yet.
-      </div>
-    );
+  if (projects.length === 0 && totalProjects > 0) {
+    return <NoFilterResults />;
   }
 
   return (

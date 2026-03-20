@@ -23,7 +23,7 @@ export default function AccountPage() {
             alignItems: 'center',
             justifyContent: 'center',
             height: '200px',
-            color: 'var(--echoes-color-text-subdued)',
+            color: 'var(--echoes-color-text-subtle)',
             border: '1px dashed var(--echoes-color-border-weak)',
             borderRadius: 'var(--echoes-border-radius-200)',
           }}>

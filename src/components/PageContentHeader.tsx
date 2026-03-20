@@ -42,7 +42,7 @@ export function PageContentHeader({
   plan,
   metadata,
   githubUrl,
-}: PageContentHeaderProps) {
+}: Readonly<PageContentHeaderProps>) {
   const planBadge = plan ? (
     <Badge variety={PLAN_CONFIG[plan].variety} size="small">
       {PLAN_CONFIG[plan].label}
@@ -50,7 +50,7 @@ export function PageContentHeader({
   ) : null;
 
   const suffix = (badge || planBadge) ? (
-    <>{badge}{planBadge}</>
+    <span style={{ marginLeft: 'var(--echoes-dimension-space-100)' }}>{badge}{planBadge}</span>
   ) : undefined;
 
   return (
@@ -61,7 +61,10 @@ export function PageContentHeader({
           <Layout.ContentHeader.Breadcrumbs
             items={breadcrumbs.map((item) => ({
               ...item,
-              highlight: item.to ? 'default' : 'subtle',
+              highlight: 'subtle' as const,
+              linkElement: item.to
+                ? item.linkElement
+                : <span style={{ color: 'var(--echoes-color-text-default)' }}>{item.linkElement}</span>,
             }))}
           />
         ) : undefined

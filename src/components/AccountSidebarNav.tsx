@@ -7,20 +7,7 @@ import {
   IconProject,
   Layout,
 } from '@sonarsource/echoes-react';
-
-function AccountAvatar() {
-  return (
-    <div style={{
-      width: '2rem', height: '2rem',
-      borderRadius: '50%',
-      backgroundColor: '#6b7280',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      color: '#fff', fontWeight: 700, fontSize: '0.875rem', flexShrink: 0,
-    }}>
-      M
-    </div>
-  );
-}
+import { CURRENT_USER } from '../data/currentUser';
 
 export function AccountSidebarNav() {
   return (
@@ -28,10 +15,14 @@ export function AccountSidebarNav() {
       <Layout.SidebarNavigation.Header
         avatar={
           <span style={{ display: 'inline-flex', paddingRight: 'var(--echoes-dimension-space-150)' }}>
-            <AccountAvatar />
+            <img
+              src={CURRENT_USER.avatarUrl}
+              alt={CURRENT_USER.displayName}
+              style={{ width: '2rem', height: '2rem', borderRadius: '50%', objectFit: 'cover', display: 'block', flexShrink: 0 }}
+            />
           </span>
         }
-        name="My Account"
+        name={CURRENT_USER.displayName}
         qualifier="Personal account"
         isInteractive
       />
