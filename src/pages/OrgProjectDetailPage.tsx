@@ -1,12 +1,29 @@
 import { useEffect } from 'react';
-import { Layout } from '@sonarsource/echoes-react';
-import { useSearchParams } from 'react-router-dom';
+import { Badge, IconInfo, Layout } from '@sonarsource/echoes-react';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { getAllProjects } from '../data/orgs';
-import { PageContentHeader } from '../components/PageContentHeader';
+import { ProjectPageHeader, slugToLabel } from '../components/ProjectPageHeader';
+import { ProjectOverviewContent } from '../components/ProjectOverviewContent';
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+const dot = (
+  <span style={{ margin: '0 var(--echoes-dimension-space-75)', color: 'var(--echoes-color-text-subtle)' }}>•</span>
+);
+
+function relativeTime(dateStr: string): string {
+  // Parses "DD/MM/YYYY, HH:MM"
+  const [datePart] = dateStr.split(', ');
+  const [day, month, year] = datePart.split('/').map(Number);
+  const diffDays = Math.floor((Date.now() - new Date(year, month - 1, day).getTime()) / 86_400_000);
+  if (diffDays === 0) return 'today';
+  if (diffDays === 1) return '1 day ago';
+  return `${diffDays} days ago`;
+}
 
 // ─── Content slot ─────────────────────────────────────────────────────────────
-// Replace this component with your actual project content.
-function PageContent() {
+// Placeholder used for project pages that don't have dedicated content yet.
+function ContentPlaceholder() {
   return (
     <div style={{
       display: 'flex',
@@ -24,35 +41,55 @@ function PageContent() {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function OrgProjectDetailPage() {
+  const { '*': subPath } = useParams<{ '*': string }>();
   const [searchParams] = useSearchParams();
-  const projectId = searchParams.get('id') ?? 'Project';
+
+  const projectKey = searchParams.get('id') ?? '';
+  const pageSlug   = subPath?.split('/')[0] || 'overview';
+  const pageTitle  = slugToLabel(pageSlug);
+
   const allProjects = getAllProjects();
-  const project = allProjects.find(p => `${p.orgId}-${p.id}` === projectId);
-  const projectName = project?.name ?? projectId;
-  const orgId = project?.orgId ?? projectId.split('-')[0];
+  const project = allProjects.find(p => `${p.orgId}-${p.id}` === projectKey);
+  const projectName = project?.name ?? projectKey;
 
-  useEffect(() => { document.title = `Overview - ${projectName} - SonarQube Cloud`; }, [projectName]);
+  useEffect(() => {
+    document.title = `${pageTitle} - ${projectName} - SonarQube Cloud`;
+  }, [pageTitle, projectName]);
 
-  const metadataParts = [
-    project?.lastAnalysis ? `Last analysis: ${project.lastAnalysis}` : null,
-    project?.linesOfCode ? `${project.linesOfCode} Lines of Code` : null,
-    project?.languages?.join(', ') ?? null,
-  ].filter(Boolean).join(' · ');
+  const headerMetadata = project ? (
+    <>
+      <Badge variety="neutral" size="small">
+        {project.visibility === 'public' ? 'Public' : 'Private'}
+      </Badge>
+      {dot}
+      <span>No tags</span>
+      {dot}
+      <span style={{ display: 'inline-flex', alignItems: 'center', gap: 'var(--echoes-dimension-space-50)' }}>
+        {project.linesOfCode ?? '—'} Lines of Code
+        <IconInfo />
+      </span>
+      {project.lastAnalysis && (
+        <>
+          {dot}
+          <span>Last analysis <strong>{relativeTime(project.lastAnalysis)}</strong></span>
+        </>
+      )}
+    </>
+  ) : undefined;
 
   return (
     <Layout.ContentGrid>
-      <PageContentHeader
-        title={projectName}
-        breadcrumbs={[
-          { linkElement: orgId, to: `/organizations/${orgId}/projects` },
-          { linkElement: projectName },
-        ]}
-        metadata={metadataParts || undefined}
-        githubUrl="https://github.com"
+      <ProjectPageHeader
+        pageTitle={pageTitle}
+        projectKey={projectKey}
+        metadata={headerMetadata}
       />
       <Layout.PageGrid>
         <Layout.PageContent>
-          <PageContent />
+          {pageSlug === 'overview'
+            ? <ProjectOverviewContent />
+            : <ContentPlaceholder />
+          }
         </Layout.PageContent>
       </Layout.PageGrid>
     </Layout.ContentGrid>

@@ -226,27 +226,94 @@ All pages must follow the correct Echoes component hierarchy.
 
 **CRITICAL:** `ContentHeader`, `AsideLeft`, and `PageGrid` must be **direct siblings** inside `ContentGrid`. Never nest one inside another.
 
-## Design Tokens
+## Echoes-First Styling — MANDATORY
 
-Always use Echoes CSS variables. Never use hardcoded `px` values or colour codes.
+**All styling MUST use Echoes exclusively.** This applies to every component, page, and piece of UI in this project.
+
+### Components
+Always use Echoes React components from `@sonarsource/echoes-react`. Check `.claude/skills/echoes-components/reference/` before building a custom element — if an Echoes component exists for the use case, use it.
+
+### Colors
+- **Always** use `var(--echoes-color-*)` tokens. Never use hardcoded hex values (`#1a1a1a`), `rgb()`, or named colours.
+- **Never** use the `--color-*` intermediary variables defined in `styles.css` `:root` — these do not update correctly with the Echoes theme and will resolve to wrong values.
+
+```tsx
+// Correct
+style={{ color: 'var(--echoes-color-text-default)' }}
+style={{ background: 'var(--echoes-color-surface-default)' }}
+style={{ border: '1px solid var(--echoes-color-border-weak)' }}
+
+// Wrong
+style={{ color: '#e5e7eb' }}
+style={{ background: 'var(--color-bg-secondary)' }}   // ← intermediary var, breaks theme
+style={{ color: 'var(--echoes-color-text-subdued)' }} // ← token does not exist
+```
+
+### Spacing
+Always use `var(--echoes-dimension-space-*)`. Never use hardcoded `px` values.
 
 ```tsx
 // Correct
 style={{ padding: 'var(--echoes-dimension-space-200)' }}
+style={{ gap: 'var(--echoes-dimension-space-150)' }}
 
 // Wrong
 style={{ padding: '16px' }}
+style={{ gap: '12px' }}
 ```
 
-Common tokens:
-| Token | Value |
-|-------|-------|
+### Typography
+Always use `var(--echoes-font-size-*)` and `var(--echoes-font-weight-*)`. Never hardcode `font-size` in `px`/`rem` or numeric `font-weight` values.
+
+```tsx
+// Correct
+style={{ fontSize: 'var(--echoes-font-size-30)', fontWeight: 'var(--echoes-font-weight-semi-bold)' }}
+
+// Wrong
+style={{ fontSize: '14px', fontWeight: 600 }}
+```
+
+### Border radius
+Always use `var(--echoes-border-radius-*)`.
+
+```tsx
+// Correct
+style={{ borderRadius: 'var(--echoes-border-radius-200)' }}
+
+// Wrong
+style={{ borderRadius: '8px' }}
+```
+
+### Common tokens reference
+| Token | Purpose |
+|-------|---------|
+| `var(--echoes-color-surface-canvas-default)` | Page / canvas background |
+| `var(--echoes-color-surface-default)` | Card / panel background |
+| `var(--echoes-color-surface-inset)` | Inset / recessed surface |
+| `var(--echoes-color-text-default)` | Primary body text |
+| `var(--echoes-color-text-subtle)` | Secondary / muted text |
+| `var(--echoes-color-text-disabled)` | Disabled-state text only |
+| `var(--echoes-color-icon-subtle)` | Secondary icon colour |
+| `var(--echoes-color-icon-warning)` | Warning / star-filled icon |
+| `var(--echoes-color-border-weak)` | Standard card border |
+| `var(--echoes-color-border-bold)` | Prominent border |
+| `var(--echoes-dimension-space-50)` | 4px |
+| `var(--echoes-dimension-space-75)` | 6px |
 | `var(--echoes-dimension-space-100)` | 8px |
+| `var(--echoes-dimension-space-150)` | 12px |
 | `var(--echoes-dimension-space-200)` | 16px |
 | `var(--echoes-dimension-space-300)` | 24px |
-| `var(--echoes-color-text-subdued)` | muted text colour |
-| `var(--echoes-color-border-weak)` | light border colour |
-| `var(--echoes-border-radius-200)` | standard corner radius |
+| `var(--echoes-dimension-space-400)` | 32px |
+| `var(--echoes-border-radius-100)` | Small radius |
+| `var(--echoes-border-radius-200)` | Standard card radius |
+| `var(--echoes-font-size-10)` | XS |
+| `var(--echoes-font-size-20)` | SM |
+| `var(--echoes-font-size-30)` | MD (body default) |
+| `var(--echoes-font-size-40)` | LG |
+| `var(--echoes-font-size-50)` | XL |
+| `var(--echoes-font-weight-regular)` | Normal weight |
+| `var(--echoes-font-weight-semi-bold)` | Semi-bold |
+| `var(--echoes-font-weight-bold)` | Bold |
 
 ## Icon System
 

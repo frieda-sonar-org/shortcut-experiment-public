@@ -1,5 +1,10 @@
-import { ReactNode } from 'react';
-import { Badge, Button, Layout } from '@sonarsource/echoes-react';
+import { forwardRef, ReactNode } from 'react';
+import { Badge, Button, ButtonIcon, IconStar, Layout } from '@sonarsource/echoes-react';
+
+// Stable module-level icon with warning color baked in — used by ButtonIcon when starred
+const IconStarWarning = forwardRef<HTMLSpanElement, React.ComponentPropsWithoutRef<typeof IconStar>>(
+  (props, ref) => <IconStar {...props} ref={ref} color="echoes-color-icon-warning" />
+);
 
 export type PlanType = 'free' | 'team' | 'enterprise';
 
@@ -33,6 +38,9 @@ interface PageContentHeaderProps {
   metadata?: ReactNode;
   /** If provided, renders a "View on GitHub" button in the actions area */
   githubUrl?: string;
+  /** If provided, renders a star/favourite toggle button in the actions area */
+  isStarred?: boolean;
+  onToggleStar?: () => void;
 }
 
 export function PageContentHeader({
@@ -42,6 +50,8 @@ export function PageContentHeader({
   plan,
   metadata,
   githubUrl,
+  isStarred,
+  onToggleStar,
 }: Readonly<PageContentHeaderProps>) {
   const planBadge = plan ? (
     <Badge variety={PLAN_CONFIG[plan].variety} size="small">
@@ -80,11 +90,22 @@ export function PageContentHeader({
         ) : undefined
       }
       actions={
-        githubUrl ? (
+        (githubUrl || onToggleStar !== undefined) ? (
           <Layout.ContentHeader.Actions>
-            <Button to={githubUrl} variety="default" prefix={<GitHubIcon />}>
-              View on GitHub
-            </Button>
+            {githubUrl && (
+              <Button to={githubUrl} variety="default" prefix={<GitHubIcon />}>
+                View on GitHub
+              </Button>
+            )}
+            {onToggleStar !== undefined && (
+              <ButtonIcon
+                Icon={isStarred ? IconStarWarning : IconStar}
+                isIconFilled={isStarred}
+                ariaLabel={isStarred ? 'Remove from favourites' : 'Add to favourites'}
+                variety="default"
+                onClick={onToggleStar}
+              />
+            )}
           </Layout.ContentHeader.Actions>
         ) : undefined
       }
