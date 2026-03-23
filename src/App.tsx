@@ -83,7 +83,7 @@ function AppShell() {
 const App: React.FC = () => {
   return (
     <IntlProvider locale="en" messages={{}}>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <EchoesProvider toastsClassName="toast-fix">
           <FavouritesProvider>
             <ThemeProvider theme="dark" asChild>
