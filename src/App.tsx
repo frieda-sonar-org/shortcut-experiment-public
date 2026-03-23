@@ -56,7 +56,7 @@ function AppShell() {
       {isAccountLevel && <AccountSidebarNav />}
 
       <Routes>
-        <Route path="/" element={<Navigate to="/explore" replace />} />
+        <Route path="/" element={<Navigate to="/projects" replace />} />
         {/* TOP LEVEL */}
         <Route path="/projects" element={<MyProjectsPage />} />
         <Route path="/issues" element={<MyIssuesPage />} />
