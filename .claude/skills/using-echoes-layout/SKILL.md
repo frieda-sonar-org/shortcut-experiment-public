@@ -253,6 +253,43 @@ Before adding content components:
 4. Verify: All siblings of ContentGrid ✓
 5. Test: Layout renders correctly ✓
 
+### Type 4: Content Grid with Aside + Full-Width Page Header
+
+**Use when:** Page has a filter aside AND needs a styled page header (background + bottom divider) that fills the full right-column width edge-to-edge.
+
+**Problem with Type 2:** A custom header div inside `Layout.PageGrid` (default) is constrained to `maxWidth: 1160px` centered — it won't fill the full right column on wide screens.
+
+**Solution:** `width="fluid"` on `PageGrid` removes the max-width from the inner grid, so the header div fills the full column. Then restore 1160px centering manually inside `Layout.PageContent`.
+
+```tsx
+<Layout.ContentGrid>
+  <Layout.AsideLeft size="medium">
+    {/* Filters */}
+  </Layout.AsideLeft>
+
+  {/* width="fluid" lets the header div fill the full right column */}
+  <Layout.PageGrid width="fluid">
+    <div style={{
+      background: 'var(--echoes-color-surface-default)',
+      borderBottom: '1px solid var(--echoes-color-border-weak)',
+      padding: 'var(--echoes-dimension-space-300) var(--echoes-dimension-space-400)',
+    }}>
+      <div style={{ fontSize: 'var(--echoes-font-size-50)', fontWeight: 'var(--echoes-font-weight-bold)', color: 'var(--echoes-color-text-default)' }}>
+        Page Title
+      </div>
+    </div>
+    <Layout.PageContent>
+      {/* Restore original centered width for content only */}
+      <div style={{ maxWidth: 'var(--echoes-layout-sizes-max-width-default)', marginLeft: 'auto', marginRight: 'auto' }}>
+        {/* Page content */}
+      </div>
+    </Layout.PageContent>
+  </Layout.PageGrid>
+</Layout.ContentGrid>
+```
+
+**Key detail:** `AsideLeft`, `PageGrid` are siblings inside `ContentGrid`. The header div is a direct child of `PageGrid`, placed before `PageContent`. The `width="fluid"` prop only affects `PageGridInner`'s max-width — `Layout.PageContent` itself has no intrinsic max-width, so the inner div wrapper restores it.
+
 ## Key Principles
 
 1. **Read examples first** - Don't guess hierarchy

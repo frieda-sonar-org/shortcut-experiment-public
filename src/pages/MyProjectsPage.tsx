@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { Button, ButtonIcon, IconArrowDown, IconHome, Layout } from '@sonarsource/echoes-react';
+import { Link } from 'react-router-dom';
+import { Button, ButtonIcon, IconArrowDown, IconChevronDown, IconHome, Layout } from '@sonarsource/echoes-react';
 import { useFavourites } from '../context/FavouritesContext';
-import { getAllProjects } from '../data/orgs';
+import { getAllProjects, ORGS } from '../data/orgs';
 import type { Project } from '../data/orgs';
 import { ProjectCard } from '../components/ProjectCard';
 import { applyProjectFilters, emptyProjectFilters, ProjectFilterState, ProjectFilters } from '../components/ProjectFilters';
@@ -103,11 +104,13 @@ export default function MyProjectsPage({ pageTitle, pageDescription }: Readonly<
   const { isStarred, toggleStar } = useFavourites();
 
   const [filters, setFilters] = useState<ProjectFilterState>(emptyProjectFilters);
+  const [showOrgs, setShowOrgs] = useState(false);
 
   const favourites = projects.filter(p => isStarred(projectKey(p)));
   const filtered = applyProjectFilters(favourites, filters);
 
-  if (favourites.length === 0) {
+  // New User empty state: no projects exist in any of their orgs
+  if (projects.length === 0) {
     return (
       <Layout.ContentGrid>
         <Layout.PageGrid>
@@ -135,8 +138,157 @@ export default function MyProjectsPage({ pageTitle, pageDescription }: Readonly<
               </span>
               <div style={{ display: 'flex', gap: 'var(--echoes-dimension-space-200)', flexWrap: 'wrap', justifyContent: 'center', marginTop: 'var(--echoes-dimension-space-200)' }}>
                 <Button variety="default">Analyze new project</Button>
-                <Button variety="default" suffix={<IconArrowDown />}>Favorite projects from your orgs</Button>
+                <div style={{ position: 'relative' }}>
+                  <Button
+                    variety="default"
+                    suffix={
+                      <span style={{
+                        display: 'inline-flex',
+                        transform: showOrgs ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.15s',
+                      }}>
+                        <IconChevronDown />
+                      </span>
+                    }
+                    onClick={() => setShowOrgs(v => !v)}
+                  >
+                    Favorite projects from your orgs
+                  </Button>
+                  {showOrgs && (
+                    <div style={{
+                      position: 'absolute',
+                      top: 'calc(100% + var(--echoes-dimension-space-50))',
+                      left: 0,
+                      minWidth: '100%',
+                      background: 'var(--echoes-color-surface-default)',
+                      border: '1px solid var(--echoes-color-border-weak)',
+                      borderRadius: 'var(--echoes-border-radius-200)',
+                      overflow: 'hidden',
+                      zIndex: 10,
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                    }}>
+                      {ORGS.filter(o => o.isUserOrg).map(org => (
+                        <Link
+                          key={org.id}
+                          to={`/organizations/${org.id}/projects`}
+                          style={{
+                            display: 'block',
+                            padding: 'var(--echoes-dimension-space-150) var(--echoes-dimension-space-200)',
+                            fontSize: 'var(--echoes-font-size-30)',
+                            color: 'var(--echoes-color-text-default)',
+                            textDecoration: 'none',
+                            whiteSpace: 'nowrap',
+                            textAlign: 'left',
+                          }}
+                        >
+                          {org.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <Button variety="default">Favorite public projects</Button>
+              </div>
+            </div>
+          </Layout.PageContent>
+        </Layout.PageGrid>
+      </Layout.ContentGrid>
+    );
+  }
+
+  // No Favourites empty state: user has projects but hasn't starred any
+  if (favourites.length === 0) {
+    return (
+      <Layout.ContentGrid>
+        <Layout.AsideLeft size="medium">
+          <ProjectFilters allProjects={[]} filters={filters} onChange={setFilters} />
+        </Layout.AsideLeft>
+
+        <Layout.PageGrid width="fluid">
+          <div style={{
+            background: 'var(--echoes-color-surface-default)',
+            borderBottom: '1px solid var(--echoes-color-border-weak)',
+            padding: 'var(--echoes-dimension-space-300) var(--echoes-dimension-space-400)',
+          }}>
+            <div style={{ fontSize: 'var(--echoes-font-size-50)', fontWeight: 'var(--echoes-font-weight-bold)', color: 'var(--echoes-color-text-default)' }}>
+              {pageTitle ?? 'Favorited Projects'}
+            </div>
+            <div style={{ fontSize: 'var(--echoes-font-size-30)', color: 'var(--echoes-color-text-subtle)', marginTop: 'var(--echoes-dimension-space-50)' }}>
+              {pageDescription ?? "Projects marked as favorites across your organizations"}
+            </div>
+          </div>
+          <Layout.PageContent>
+            <div style={{ maxWidth: 'var(--echoes-layout-sizes-max-width-default)', marginLeft: 'auto', marginRight: 'auto' }}>
+              <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: 'var(--echoes-dimension-space-200)',
+                padding: 'var(--echoes-dimension-space-800) var(--echoes-dimension-space-400)',
+                textAlign: 'center',
+              }}>
+                <span style={{
+                  fontSize: 'var(--echoes-font-size-40)',
+                  fontWeight: 'var(--echoes-font-weight-semi-bold)',
+                  color: 'var(--echoes-color-text-default)',
+                }}>
+                  You don't have any favorite projects yet.
+                </span>
+                <span style={{
+                  fontSize: 'var(--echoes-font-size-30)',
+                  color: 'var(--echoes-color-text-default)',
+                }}>
+                  Start favoriting projects from your organizations
+                </span>
+                <div style={{ marginTop: 'var(--echoes-dimension-space-200)', position: 'relative' }}>
+                  <Button
+                    variety="default"
+                    suffix={
+                      <span style={{
+                        display: 'inline-flex',
+                        transform: showOrgs ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.15s',
+                      }}>
+                        <IconChevronDown />
+                      </span>
+                    }
+                    onClick={() => setShowOrgs(v => !v)}
+                  >
+                    Favorite projects from your orgs
+                  </Button>
+                  {showOrgs && (
+                    <div style={{
+                      position: 'absolute',
+                      top: 'calc(100% + var(--echoes-dimension-space-50))',
+                      left: 0,
+                      minWidth: '100%',
+                      background: 'var(--echoes-color-surface-default)',
+                      border: '1px solid var(--echoes-color-border-weak)',
+                      borderRadius: 'var(--echoes-border-radius-200)',
+                      overflow: 'hidden',
+                      zIndex: 10,
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+                    }}>
+                      {ORGS.filter(o => o.isUserOrg).map(org => (
+                        <Link
+                          key={org.id}
+                          to={`/organizations/${org.id}/projects`}
+                          style={{
+                            display: 'block',
+                            padding: 'var(--echoes-dimension-space-150) var(--echoes-dimension-space-200)',
+                            fontSize: 'var(--echoes-font-size-30)',
+                            color: 'var(--echoes-color-text-default)',
+                            textDecoration: 'none',
+                            whiteSpace: 'nowrap',
+                            textAlign: 'left',
+                          }}
+                        >
+                          {org.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </Layout.PageContent>
@@ -160,11 +312,9 @@ export default function MyProjectsPage({ pageTitle, pageDescription }: Readonly<
           <div style={{ fontSize: 'var(--echoes-font-size-50)', fontWeight: 'var(--echoes-font-weight-bold)', color: 'var(--echoes-color-text-default)' }}>
             {pageTitle ?? 'Favorited Projects'}
           </div>
-          {pageDescription && (
-            <div style={{ fontSize: 'var(--echoes-font-size-30)', color: 'var(--echoes-color-text-subtle)', marginTop: 'var(--echoes-dimension-space-50)' }}>
-              {pageDescription}
-            </div>
-          )}
+          <div style={{ fontSize: 'var(--echoes-font-size-30)', color: 'var(--echoes-color-text-subtle)', marginTop: 'var(--echoes-dimension-space-50)' }}>
+            {pageDescription ?? "Projects marked as favorites across your organizations"}
+          </div>
         </div>
         <Layout.PageContent>
           <div style={{ maxWidth: 'var(--echoes-layout-sizes-max-width-default)', marginLeft: 'auto', marginRight: 'auto' }}>

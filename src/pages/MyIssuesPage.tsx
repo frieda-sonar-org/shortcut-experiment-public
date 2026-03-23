@@ -288,11 +288,9 @@ export default function MyIssuesPage({ pageTitle, pageDescription }: Readonly<My
           <div style={{ fontSize: 'var(--echoes-font-size-50)', fontWeight: 'var(--echoes-font-weight-bold)', color: 'var(--echoes-color-text-default)' }}>
             {pageTitle ?? 'Assigned Issues'}
           </div>
-          {pageDescription && (
-            <div style={{ fontSize: 'var(--echoes-font-size-30)', color: 'var(--echoes-color-text-subtle)', marginTop: 'var(--echoes-dimension-space-50)' }}>
-              {pageDescription}
-            </div>
-          )}
+          <div style={{ fontSize: 'var(--echoes-font-size-30)', color: 'var(--echoes-color-text-subtle)', marginTop: 'var(--echoes-dimension-space-50)' }}>
+            {pageDescription ?? "Issues assigned to you across all your organizations"}
+          </div>
         </div>
         <Layout.PageContent>
           <div style={{ maxWidth: 'var(--echoes-layout-sizes-max-width-default)', marginLeft: 'auto', marginRight: 'auto' }}>

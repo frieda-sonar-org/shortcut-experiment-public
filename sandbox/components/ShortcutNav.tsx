@@ -1,13 +1,12 @@
 /**
- * ShortcutNav — Sandbox prototype for testing renamed navigation items.
+ * ShortcutNav — Renamed navigation items for the shortcut experiment.
  *
- * This is a copy of GlobalNav with the following changes under test:
+ * Changes from GlobalNav:
  *   - "My Projects"  →  "Favorited Projects"
  *   - "My Issues"    →  "Assigned Issues"
- *   - All nav links prefixed with /snav/ so you stay in test mode while navigating
  *
- * To enter test mode: navigate to /snav/projects
- * To exit:            navigate to any non-/snav/ route (e.g. /projects)
+ * This is now the default nav for all routes in this experiment.
+ * Revert to GlobalNav in App.tsx to restore the original labels.
  */
 
 import React from 'react';
@@ -46,25 +45,25 @@ export function ShortcutNav() {
     <Layout.GlobalNavigation>
       <Layout.GlobalNavigation.Primary>
         <Layout.GlobalNavigation.Home>
-          <Link to="/snav/explore" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
+          <Link to="/explore" style={{ display: 'flex', alignItems: 'center', textDecoration: 'none' }}>
             <LogoSonarQubeCloud hasText size={LogoSize.Small} />
           </Link>
         </Layout.GlobalNavigation.Home>
         <Layout.GlobalNavigation.ItemsContainer>
           {/* ↓ RENAMED: My Projects → Favorited Projects */}
-          <Layout.GlobalNavigation.Item to="/snav/projects">Favorited Projects</Layout.GlobalNavigation.Item>
+          <Layout.GlobalNavigation.Item to="/projects">Favorited Projects</Layout.GlobalNavigation.Item>
           {/* ↓ RENAMED: My Issues → Assigned Issues */}
-          <Layout.GlobalNavigation.Item to="/snav/issues">Assigned Issues</Layout.GlobalNavigation.Item>
+          <Layout.GlobalNavigation.Item to="/issues">Assigned Issues</Layout.GlobalNavigation.Item>
           <Layout.GlobalNavigation.DropdownItem
             items={
-              <DropdownMenu.ItemLink to="/snav/portfolios/product-design-ux">
+              <DropdownMenu.ItemLink to="/portfolios/product-design-ux">
                 Product-Design-UX
               </DropdownMenu.ItemLink>
             }
           >
             My Portfolios
           </Layout.GlobalNavigation.DropdownItem>
-          <Layout.GlobalNavigation.Item to="/snav/explore">Explore</Layout.GlobalNavigation.Item>
+          <Layout.GlobalNavigation.Item to="/explore">Explore</Layout.GlobalNavigation.Item>
         </Layout.GlobalNavigation.ItemsContainer>
       </Layout.GlobalNavigation.Primary>
 
@@ -133,20 +132,20 @@ export function ShortcutNav() {
           header={{ label: CURRENT_USER.username, helpText: CURRENT_USER.email }}
           items={
             <>
-              <DropdownMenu.ItemLink to="/snav/account">My account</DropdownMenu.ItemLink>
+              <DropdownMenu.ItemLink to="/account">My account</DropdownMenu.ItemLink>
               <DropdownMenu.Separator />
               <DropdownMenu.GroupLabel>
                 <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--echoes-dimension-space-100)' }}>
                   My Organizations <Badge variety="neutral" size="small">3</Badge>
                 </span>
               </DropdownMenu.GroupLabel>
-              <DropdownMenu.ItemLink to="/snav/organizations/product-design-ux-org/projects" prefix={<OrgAvatar letter="P" color="#e11d48" />} suffix={<Badge variety="neutral" size="small">Admin</Badge>}>
+              <DropdownMenu.ItemLink to="/organizations/product-design-ux-org/projects" prefix={<OrgAvatar letter="P" color="#e11d48" />} suffix={<Badge variety="neutral" size="small">Admin</Badge>}>
                 Product-Design-UX-Org
               </DropdownMenu.ItemLink>
-              <DropdownMenu.ItemLink to="/snav/organizations/lisa-lee-sonar/projects" prefix={<OrgAvatar letter="l" color="#6b7280" />} suffix={<Badge variety="neutral" size="small">Admin</Badge>}>
+              <DropdownMenu.ItemLink to="/organizations/lisa-lee-sonar/projects" prefix={<OrgAvatar letter="l" color="#6b7280" />} suffix={<Badge variety="neutral" size="small">Admin</Badge>}>
                 lisa-lee-sonar
               </DropdownMenu.ItemLink>
-              <DropdownMenu.ItemLink to="/snav/organizations/enterprise-platform-org/projects" prefix={<OrgAvatar letter="E" color="#7c3aed" />} suffix={<Badge variety="neutral" size="small">Admin</Badge>}>
+              <DropdownMenu.ItemLink to="/organizations/enterprise-platform-org/projects" prefix={<OrgAvatar letter="E" color="#7c3aed" />} suffix={<Badge variety="neutral" size="small">Admin</Badge>}>
                 Enterprise-Platform-Org
               </DropdownMenu.ItemLink>
               <DropdownMenu.Separator />

@@ -7,7 +7,6 @@ import {
   ThemeProvider,
 } from '@sonarsource/echoes-react';
 
-import { GlobalNav } from './components/GlobalNav';
 import { ShortcutNav } from '../sandbox/components/ShortcutNav';
 import { SidebarNav } from './components/SidebarNav';
 import { OrgSidebarNav } from './components/OrgSidebarNav';
@@ -36,14 +35,13 @@ function AppShell() {
   const { pathname } = useLocation();
 
   const isExperiments  = pathname === '/experiments';
-  const isSandboxNav   = pathname.startsWith('/snav');
-  const isOrgLevel     = pathname.startsWith('/organizations') || pathname.startsWith('/snav/organizations');
-  const isProjectLevel = pathname.startsWith('/project/')      || pathname.startsWith('/snav/project/');
-  const isAccountLevel = pathname.startsWith('/account')       || pathname.startsWith('/snav/account');
+  const isOrgLevel     = pathname.startsWith('/organizations');
+  const isProjectLevel = pathname.startsWith('/project/');
+  const isAccountLevel = pathname.startsWith('/account');
 
   return (
     <Layout>
-      {!isExperiments && (isSandboxNav ? <ShortcutNav /> : <GlobalNav />)}
+      {!isExperiments && <ShortcutNav />}
 
       {isOrgLevel && <OrgSidebarNav />}
       {isProjectLevel && <SidebarNav />}

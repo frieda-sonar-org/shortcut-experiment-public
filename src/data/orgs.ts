@@ -41,6 +41,8 @@ export interface Project {
 export interface OrgData {
   id: string;
   name: string;
+  /** True for orgs the current user is a member of (shown in nav + org picker dropdowns) */
+  isUserOrg?: boolean;
   projects: Project[];
 }
 
@@ -50,6 +52,7 @@ export const ORGS: OrgData[] = [
   {
     id: 'product-design-ux-org',
     name: 'Product-Design-UX-Org',
+    isUserOrg: true,
     projects: [
       {
         id: 'code-review-prototype',
@@ -136,6 +139,7 @@ export const ORGS: OrgData[] = [
   {
     id: 'lisa-lee-sonar',
     name: 'lisa-lee-sonar',
+    isUserOrg: true,
     projects: [
       {
         id: 'test-cpp-simple',
@@ -272,6 +276,7 @@ export const ORGS: OrgData[] = [
   {
     id: 'enterprise-platform-org',
     name: 'Enterprise-Platform-Org',
+    isUserOrg: true,
     projects: [
       {
         id: 'platform-api',
