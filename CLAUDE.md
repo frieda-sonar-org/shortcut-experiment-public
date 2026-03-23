@@ -34,6 +34,24 @@ For additional pages:
 - Add a file to `src/pages/`
 - Add a `<Route>` to `src/App.tsx`
 
+## GitHub Pages Deployment
+
+This project deploys to GitHub Pages via `.github/workflows/deploy.yml` using `actions/deploy-pages`.
+
+**Required: `public/.nojekyll`**
+Always ensure `public/.nojekyll` exists. Without it, GitHub Pages runs Jekyll on the site, which causes `.js` assets to be served as `application/octet-stream` instead of `application/javascript` — breaking ES module loading entirely.
+
+- `public/.nojekyll` is already present in this repo
+- When copying this template to a new project, verify the file is included
+- If you ever see "Failed to load module script… MIME type of application/octet-stream" on the deployed site, check that `public/.nojekyll` exists
+
+**Vite `base` path**
+Set `base` in `vite.config.ts` to match where the app is actually served:
+- `base: '/'` — for a custom domain or `username.github.io` root (user/org page)
+- `base: '/<repo-name>/'` — for a standard project page at `username.github.io/<repo-name>/`
+
+This project is deployed at `frieda-sonar-org.github.io/shortcut-experiment-public/`, so `base: '/shortcut-experiment-public/'`.
+
 ## Skills
 
 Before working with Echoes components, read:
