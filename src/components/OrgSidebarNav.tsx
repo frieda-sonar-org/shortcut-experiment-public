@@ -42,7 +42,7 @@ export function OrgSidebarNav() {
     <Layout.SidebarNavigation>
       <Layout.SidebarNavigation.Header
         avatar={
-          <span style={{ display: 'inline-flex', paddingRight: 'var(--echoes-dimension-space-150)' }}>
+          <span style={{ display: 'inline-flex', marginRight: 'var(--echoes-dimension-space-200)' }}>
             <OrgAvatar letter={letter} />
           </span>
         }

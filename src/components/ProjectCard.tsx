@@ -1,4 +1,4 @@
-import { Badge, IconCheckCircle, IconDash, IconX, RatingBadge } from '@sonarsource/echoes-react';
+import { Badge, IconCheckCircle, IconDash, IconX, RatingBadge, toast } from '@sonarsource/echoes-react';
 import { Link } from 'react-router-dom';
 import CoverageIndicator from './CoverageIndicator';
 import type { Project, QualityGateStatus, RatingMetric } from '../data/orgs';
@@ -119,6 +119,14 @@ interface ProjectCardProps {
 export function ProjectCard({ project, showOrgContext = false, isStarred = false, onToggleStar }: Readonly<ProjectCardProps>) {
   const projectUrl = `/project/overview?id=${project.orgId}-${project.id}`;
 
+  const handleToggleStar = () => {
+    onToggleStar?.();
+    toast.success({
+      description: isStarred ? 'Removed from Favorite Projects' : 'Added to Favorite Projects',
+      duration: 'short',
+    });
+  };
+
   const langSuffix = (project.languages?.length ?? 0) > 2 ? ', ...' : '';
   const languageDisplay = project.languages
     ? project.languages.slice(0, 2).join(', ') + langSuffix
@@ -142,7 +150,7 @@ export function ProjectCard({ project, showOrgContext = false, isStarred = false
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--echoes-dimension-space-100)' }}>
           <button
             aria-label={isStarred ? 'Remove from favourites' : 'Add to favourites'}
-            onClick={onToggleStar}
+            onClick={handleToggleStar}
             style={{
               background: 'none',
               border: 'none',

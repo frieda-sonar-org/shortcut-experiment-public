@@ -3331,3 +3331,11 @@
     .illustration-light { display: none; }
     .illustration-dark  { display: inline-flex; }
 }
+
+/* ── Toast alignment fix ────────────────────────────────────────────────────── */
+.toast-fix {
+  align-items: center !important;
+}
+.toast-fix > * {
+  align-self: center !important;
+}

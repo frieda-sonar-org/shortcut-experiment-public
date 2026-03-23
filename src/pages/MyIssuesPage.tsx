@@ -293,7 +293,7 @@ export default function MyIssuesPage({ pageTitle, pageDescription }: Readonly<My
           </div>
         </div>
         <Layout.PageContent>
-          <div style={{ maxWidth: 'var(--echoes-layout-sizes-max-width-default)', marginLeft: 'auto', marginRight: 'auto' }}>
+          <div style={{ maxWidth: 'var(--echoes-layout-sizes-max-width-default)', marginLeft: 'auto', marginRight: 'auto', paddingTop: 'var(--echoes-dimension-space-300)' }}>
           <IssuesToolbar count={filteredIssues.length} totalEffort={computeTotalEffort(filteredIssues)} />
           <div>
             {groups.map(group => (

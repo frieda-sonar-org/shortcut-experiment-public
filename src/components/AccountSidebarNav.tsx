@@ -14,7 +14,7 @@ export function AccountSidebarNav() {
     <Layout.SidebarNavigation>
       <Layout.SidebarNavigation.Header
         avatar={
-          <span style={{ display: 'inline-flex', paddingRight: 'var(--echoes-dimension-space-150)' }}>
+          <span style={{ display: 'inline-flex', marginRight: 'var(--echoes-dimension-space-200)' }}>
             <img
               src={CURRENT_USER.avatarUrl}
               alt={CURRENT_USER.displayName}

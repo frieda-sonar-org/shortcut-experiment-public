@@ -12,6 +12,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { CURRENT_USER } from '../../src/data/currentUser';
+import { ENTERPRISES } from '../../src/data/enterprises';
 import {
   Badge,
   ButtonIcon,
@@ -61,7 +62,7 @@ export function ShortcutNav() {
               </DropdownMenu.ItemLink>
             }
           >
-            My Portfolios
+            Enterprise Portfolios
           </Layout.GlobalNavigation.DropdownItem>
           <Layout.GlobalNavigation.Item to="/explore">Explore</Layout.GlobalNavigation.Item>
         </Layout.GlobalNavigation.ItemsContainer>
@@ -151,10 +152,14 @@ export function ShortcutNav() {
               <DropdownMenu.Separator />
               <DropdownMenu.GroupLabel>
                 <span style={{ display: 'flex', alignItems: 'center', gap: 'var(--echoes-dimension-space-100)' }}>
-                  My Enterprises <Badge variety="neutral" size="small">1</Badge>
+                  My Enterprises <Badge variety="neutral" size="small">{ENTERPRISES.length}</Badge>
                 </span>
               </DropdownMenu.GroupLabel>
-              <DropdownMenu.ItemButton prefix={<IconOrganization />}>Product-Design-UX</DropdownMenu.ItemButton>
+              {ENTERPRISES.map(e => (
+                <DropdownMenu.ItemLink key={e.id} to={`/portfolios/${e.id}`} prefix={<IconOrganization />}>
+                  {e.name}
+                </DropdownMenu.ItemLink>
+              ))}
               <DropdownMenu.Separator />
               <DropdownMenu.ItemButtonDestructive>Log out</DropdownMenu.ItemButtonDestructive>
             </>
