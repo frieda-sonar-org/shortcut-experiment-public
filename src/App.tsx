@@ -30,6 +30,22 @@ import NotFound from './pages/NotFound';
 import { FavouritesProvider } from './context/FavouritesContext';
 import { experimentalRoutes } from '../sandbox';
 
+// ─── Prototype B: pre-seeded favourites ──────────────────────────────────────
+// Visitors landing on /b/ get a pre-populated Favorited Projects list.
+// Detection happens once at load time from window.location before React mounts.
+const PROTOTYPE_B_STARRED = [
+  'product-design-ux-org-design-system-docs',
+  'product-design-ux-org-CakePHP',
+  'enterprise-platform-org-platform-api',
+  'enterprise-platform-org-data-pipeline',
+  'lisa-lee-sonar-api-gateway',
+];
+
+const _base = import.meta.env.BASE_URL;
+const _relativePath = window.location.pathname.slice(_base.length);
+const _firstSegment = _relativePath.split('/')[0];
+const isPrototypeB = _firstSegment === 'b';
+
 // ─── IA Levels ───────────────────────────────────────────────────────────────
 // TOP LEVEL        : /explore, /projects, /issues  → no sidebar
 // ENTERPRISE LEVEL : /portfolios/*                 → EnterpriseSidebarNav
@@ -57,6 +73,7 @@ function AppShell() {
 
       <Routes>
         <Route path="/" element={<Navigate to="/projects" replace />} />
+        <Route path="/b/*" element={<Navigate to="/projects" replace />} />
         {/* TOP LEVEL */}
         <Route path="/projects" element={<MyProjectsPage />} />
         <Route path="/issues" element={<MyIssuesPage />} />
@@ -85,7 +102,7 @@ const App: React.FC = () => {
     <IntlProvider locale="en" messages={{}}>
       <BrowserRouter basename={import.meta.env.BASE_URL}>
         <EchoesProvider toastsClassName="toast-fix">
-          <FavouritesProvider>
+          <FavouritesProvider initialStarred={isPrototypeB ? PROTOTYPE_B_STARRED : []}>
             <ThemeProvider theme="dark" asChild>
               <div style={{ isolation: 'isolate', position: 'relative' }}>
                 <AppShell />

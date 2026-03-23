@@ -9,8 +9,8 @@ interface FavouritesContextValue {
 
 const FavouritesContext = createContext<FavouritesContextValue | null>(null);
 
-export function FavouritesProvider({ children }: { children: ReactNode }) {
-  const [starredIds, setStarredIds] = useState<Set<string>>(() => new Set());
+export function FavouritesProvider({ children, initialStarred = [] }: { children: ReactNode; initialStarred?: string[] }) {
+  const [starredIds, setStarredIds] = useState<Set<string>>(() => new Set(initialStarred));
 
   const toggleStar = (key: string) => {
     setStarredIds(prev => {
