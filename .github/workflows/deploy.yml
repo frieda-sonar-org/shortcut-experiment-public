@@ -33,8 +33,6 @@ jobs:
 
       - name: Build
         run: yarn build
-        env:
-          GITHUB_REPOSITORY: ${{ github.repository }}
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
