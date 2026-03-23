@@ -4079,6 +4079,32 @@ __metadata:
   languageName: node
   linkType: hard
 
+"shortcut-experiment-topnav@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "shortcut-experiment-topnav@workspace:."
+  dependencies:
+    "@emotion/react": "npm:^11.14.0"
+    "@emotion/styled": "npm:^11.14.1"
+    "@mui/icons-material": "npm:^7.3.4"
+    "@mui/material": "npm:^7.3.4"
+    "@sonarsource/echoes-react": "npm:^1.7.0"
+    "@types/react": "npm:^18.3.23"
+    "@types/react-dom": "npm:^18.3.7"
+    "@types/react-is": "npm:^19"
+    "@vitejs/plugin-react": "npm:^4.7.0"
+    autoprefixer: "npm:^10.4.22"
+    postcss: "npm:^8.5.6"
+    react: "npm:^18.3.1"
+    react-dom: "npm:^18.3.1"
+    react-intl: "npm:^6.7.1"
+    react-is: "npm:^19.2.0"
+    react-router-dom: "npm:^6.30.1"
+    tailwindcss: "npm:3.4.17"
+    typescript: "npm:^5.8.3"
+    vite: "npm:^7.0.6"
+  languageName: unknown
+  linkType: soft
+
 "signal-exit@npm:^4.0.1":
   version: 4.1.0
   resolution: "signal-exit@npm:4.1.0"
@@ -4137,32 +4163,6 @@ __metadata:
   checksum: 10c0/904e767bb9c494929be013017380cbba013637da1b28e5943b566031e29df04fba57edf3f093e0914be094648b577372bd8ad247fa98cfba9c600794cd16b599
   languageName: node
   linkType: hard
-
-"sqc-template@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "sqc-template@workspace:."
-  dependencies:
-    "@emotion/react": "npm:^11.14.0"
-    "@emotion/styled": "npm:^11.14.1"
-    "@mui/icons-material": "npm:^7.3.4"
-    "@mui/material": "npm:^7.3.4"
-    "@sonarsource/echoes-react": "npm:^1.7.0"
-    "@types/react": "npm:^18.3.23"
-    "@types/react-dom": "npm:^18.3.7"
-    "@types/react-is": "npm:^19"
-    "@vitejs/plugin-react": "npm:^4.7.0"
-    autoprefixer: "npm:^10.4.22"
-    postcss: "npm:^8.5.6"
-    react: "npm:^18.3.1"
-    react-dom: "npm:^18.3.1"
-    react-intl: "npm:^6.7.1"
-    react-is: "npm:^19.2.0"
-    react-router-dom: "npm:^6.30.1"
-    tailwindcss: "npm:3.4.17"
-    typescript: "npm:^5.8.3"
-    vite: "npm:^7.0.6"
-  languageName: unknown
-  linkType: soft
 
 "ssri@npm:^12.0.0":
   version: 12.0.0

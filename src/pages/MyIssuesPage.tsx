@@ -260,7 +260,12 @@ function IssuesToolbar({ count, totalEffort }: Readonly<{ count: number; totalEf
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function MyIssuesPage() {
+interface MyIssuesPageProps {
+  pageTitle?: string;
+  pageDescription?: string;
+}
+
+export default function MyIssuesPage({ pageTitle, pageDescription }: Readonly<MyIssuesPageProps> = {}) {
   useEffect(() => { document.title = 'My Issues - My Account - SonarQube Cloud'; }, []);
 
   const [filters, setFilters] = useState<IssueFilterState>(emptyIssueFilters);
@@ -275,6 +280,12 @@ export default function MyIssuesPage() {
       </Layout.AsideLeft>
 
       <Layout.PageGrid>
+        <Layout.PageHeader
+          hasDivider
+          title={<Layout.PageHeader.Title>{pageTitle ?? 'Assigned Issues'}</Layout.PageHeader.Title>}
+          description={pageDescription ? <Layout.PageHeader.Description>{pageDescription}</Layout.PageHeader.Description> : undefined}
+          style={{ background: 'var(--echoes-color-surface-default)' }}
+        />
         <Layout.PageContent>
           <IssuesToolbar count={filteredIssues.length} totalEffort={computeTotalEffort(filteredIssues)} />
           <div>

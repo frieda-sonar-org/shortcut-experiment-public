@@ -8,6 +8,7 @@ import {
 } from '@sonarsource/echoes-react';
 
 import { GlobalNav } from './components/GlobalNav';
+import { ShortcutNav } from '../sandbox/components/ShortcutNav';
 import { SidebarNav } from './components/SidebarNav';
 import { OrgSidebarNav } from './components/OrgSidebarNav';
 import { AccountSidebarNav } from './components/AccountSidebarNav';
@@ -34,13 +35,15 @@ import { experimentalRoutes } from '../sandbox';
 function AppShell() {
   const { pathname } = useLocation();
 
-  const isOrgLevel     = pathname.startsWith('/organizations');
-  const isProjectLevel = pathname.startsWith('/project/');
-  const isAccountLevel      = pathname.startsWith('/account');
+  const isExperiments  = pathname === '/experiments';
+  const isSandboxNav   = pathname.startsWith('/snav');
+  const isOrgLevel     = pathname.startsWith('/organizations') || pathname.startsWith('/snav/organizations');
+  const isProjectLevel = pathname.startsWith('/project/')      || pathname.startsWith('/snav/project/');
+  const isAccountLevel = pathname.startsWith('/account')       || pathname.startsWith('/snav/account');
 
   return (
     <Layout>
-      <GlobalNav />
+      {!isExperiments && (isSandboxNav ? <ShortcutNav /> : <GlobalNav />)}
 
       {isOrgLevel && <OrgSidebarNav />}
       {isProjectLevel && <SidebarNav />}

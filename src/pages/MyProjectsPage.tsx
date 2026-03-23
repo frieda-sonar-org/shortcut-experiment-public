@@ -90,7 +90,12 @@ function Toolbar({ count }: Readonly<{ count: number }>) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function MyProjectsPage() {
+interface MyProjectsPageProps {
+  pageTitle?: string;
+  pageDescription?: string;
+}
+
+export default function MyProjectsPage({ pageTitle, pageDescription }: Readonly<MyProjectsPageProps> = {}) {
   useEffect(() => { document.title = 'Projects - My Account - SonarQube Cloud'; }, []);
 
   const projects = getAllProjects();
@@ -147,6 +152,12 @@ export default function MyProjectsPage() {
       </Layout.AsideLeft>
 
       <Layout.PageGrid>
+        <Layout.PageHeader
+          hasDivider
+          title={<Layout.PageHeader.Title>{pageTitle ?? 'Favorited Projects'}</Layout.PageHeader.Title>}
+          description={pageDescription ? <Layout.PageHeader.Description>{pageDescription}</Layout.PageHeader.Description> : undefined}
+          style={{ background: 'var(--echoes-color-surface-default)' }}
+        />
         <Layout.PageContent>
           <Toolbar count={filtered.length} />
           {filtered.length === 0 ? (

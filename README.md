@@ -1,4 +1,64 @@
-# GitHub Pages Setup Guide
+# Shortcut / Global Navigation Experiment
+
+Tests whether renaming navigation items reduces user confusion around global navigation — "Favorited Projects" instead of "My Projects", "Assigned Issues" instead of "My Issues".
+
+Based on [SQC-Template](../SQC-Template).
+
+## Running this experiment
+
+```bash
+cd "Shortcut Experiment"
+yarn install
+yarn dev
+```
+
+Open **`http://localhost:5173/experiments`** to see all active experiments and entry links.
+
+To enter the navigation experiment directly: **`http://localhost:5173/snav/projects`**
+
+---
+
+## Experiments
+
+The `sandbox/` folder is gitignored — safe to experiment freely without conflicts when pulling template updates.
+
+### Viewing active experiments
+
+Navigate to **`http://localhost:5173/experiments`** to see a list of all active experiments with links and descriptions.
+
+### Running an experiment
+
+Each experiment runs at its own URL prefix. Example: the Shortcut Navigation experiment lives at `/snav/projects`. Enter it by visiting that URL directly or via the Experiments index. Navigate to any non-prefixed route (e.g. `/projects`) to exit back to the main template.
+
+### Adding a new experiment
+
+1. Create `sandbox/pages/MyConcept.tsx`
+2. Add a route in `sandbox/routes.tsx`:
+   ```tsx
+   import MyConcept from './pages/MyConcept';
+
+   // inside experimentalRoutes array:
+   <Route key="my-concept" path="/my-concept" element={<MyConcept />} />,
+   ```
+3. Register it in the `EXPERIMENTS` array in `sandbox/pages/ExperimentsIndex.tsx` so it appears in the index
+4. Navigate to `http://localhost:5173/my-concept`
+
+### Graduating an experiment
+
+When a concept is ready to share:
+- Move the component to `src/components/` or `src/pages/`
+- Add a permanent `<Route>` in `src/App.tsx`
+- Remove the entry from `sandbox/routes.tsx` and `ExperimentsIndex.tsx`
+
+### Current experiments
+
+| Name | Entry URL | Description |
+|------|-----------|-------------|
+| Shortcut / Global Navigation | `/snav/projects` | Tests whether renaming nav items reduces user confusion around global navigation |
+
+---
+
+## GitHub Pages Setup Guide
 
 This guide covers how to set up a new Vite + React project for GitHub Pages deployment.
 
