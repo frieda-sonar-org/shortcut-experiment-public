@@ -210,10 +210,10 @@ export default function MyProjectsPage({ pageTitle, pageDescription }: Readonly<
             borderBottom: '1px solid var(--echoes-color-border-weak)',
             padding: 'var(--echoes-dimension-space-300) var(--echoes-dimension-space-400)',
           }}>
-            <div style={{ fontSize: 'var(--echoes-font-size-50)', fontWeight: 'var(--echoes-font-weight-bold)', color: 'var(--echoes-color-text-default)' }}>
+            <div style={{ fontSize: 'var(--echoes-font-size-40)', fontWeight: 'var(--echoes-font-weight-semi-bold)', color: 'var(--echoes-color-text-default)' }}>
               {pageTitle ?? 'Favorited Projects'}
             </div>
-            <div style={{ fontSize: 'var(--echoes-font-size-30)', color: 'var(--echoes-color-text-subtle)', marginTop: 'var(--echoes-dimension-space-50)' }}>
+            <div style={{ fontSize: 'var(--echoes-font-size-20)', fontWeight: 'var(--echoes-font-weight-regular)', color: 'var(--echoes-color-text-subtle)', marginTop: 'var(--echoes-dimension-space-50)' }}>
               {pageDescription ?? "Projects marked as favorites across your organizations"}
             </div>
           </div>
