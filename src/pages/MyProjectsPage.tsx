@@ -151,14 +151,23 @@ export default function MyProjectsPage({ pageTitle, pageDescription }: Readonly<
         <ProjectFilters allProjects={favourites} filters={filters} onChange={setFilters} />
       </Layout.AsideLeft>
 
-      <Layout.PageGrid>
-        <Layout.PageHeader
-          hasDivider
-          title={<Layout.PageHeader.Title>{pageTitle ?? 'Favorited Projects'}</Layout.PageHeader.Title>}
-          description={pageDescription ? <Layout.PageHeader.Description>{pageDescription}</Layout.PageHeader.Description> : undefined}
-          style={{ background: 'var(--echoes-color-surface-default)' }}
-        />
+      <Layout.PageGrid width="fluid">
+        <div style={{
+          background: 'var(--echoes-color-surface-default)',
+          borderBottom: '1px solid var(--echoes-color-border-weak)',
+          padding: 'var(--echoes-dimension-space-300) var(--echoes-dimension-space-400)',
+        }}>
+          <div style={{ fontSize: 'var(--echoes-font-size-50)', fontWeight: 'var(--echoes-font-weight-bold)', color: 'var(--echoes-color-text-default)' }}>
+            {pageTitle ?? 'Favorited Projects'}
+          </div>
+          {pageDescription && (
+            <div style={{ fontSize: 'var(--echoes-font-size-30)', color: 'var(--echoes-color-text-subtle)', marginTop: 'var(--echoes-dimension-space-50)' }}>
+              {pageDescription}
+            </div>
+          )}
+        </div>
         <Layout.PageContent>
+          <div style={{ maxWidth: 'var(--echoes-layout-sizes-max-width-default)', marginLeft: 'auto', marginRight: 'auto' }}>
           <Toolbar count={filtered.length} />
           {filtered.length === 0 ? (
             <NoFilterResults message="We couldn't find any results matching the selected criteria in your favorites." />
@@ -178,6 +187,7 @@ export default function MyProjectsPage({ pageTitle, pageDescription }: Readonly<
               </div>
             </div>
           )}
+          </div>
         </Layout.PageContent>
       </Layout.PageGrid>
     </Layout.ContentGrid>

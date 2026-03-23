@@ -279,14 +279,23 @@ export default function MyIssuesPage({ pageTitle, pageDescription }: Readonly<My
         <IssuesFilter allIssues={ISSUES} filters={filters} onChange={setFilters} />
       </Layout.AsideLeft>
 
-      <Layout.PageGrid>
-        <Layout.PageHeader
-          hasDivider
-          title={<Layout.PageHeader.Title>{pageTitle ?? 'Assigned Issues'}</Layout.PageHeader.Title>}
-          description={pageDescription ? <Layout.PageHeader.Description>{pageDescription}</Layout.PageHeader.Description> : undefined}
-          style={{ background: 'var(--echoes-color-surface-default)' }}
-        />
+      <Layout.PageGrid width="fluid">
+        <div style={{
+          background: 'var(--echoes-color-surface-default)',
+          borderBottom: '1px solid var(--echoes-color-border-weak)',
+          padding: 'var(--echoes-dimension-space-300) var(--echoes-dimension-space-400)',
+        }}>
+          <div style={{ fontSize: 'var(--echoes-font-size-50)', fontWeight: 'var(--echoes-font-weight-bold)', color: 'var(--echoes-color-text-default)' }}>
+            {pageTitle ?? 'Assigned Issues'}
+          </div>
+          {pageDescription && (
+            <div style={{ fontSize: 'var(--echoes-font-size-30)', color: 'var(--echoes-color-text-subtle)', marginTop: 'var(--echoes-dimension-space-50)' }}>
+              {pageDescription}
+            </div>
+          )}
+        </div>
         <Layout.PageContent>
+          <div style={{ maxWidth: 'var(--echoes-layout-sizes-max-width-default)', marginLeft: 'auto', marginRight: 'auto' }}>
           <IssuesToolbar count={filteredIssues.length} totalEffort={computeTotalEffort(filteredIssues)} />
           <div>
             {groups.map(group => (
@@ -295,6 +304,7 @@ export default function MyIssuesPage({ pageTitle, pageDescription }: Readonly<My
                 group={group}
               />
             ))}
+          </div>
           </div>
         </Layout.PageContent>
       </Layout.PageGrid>
