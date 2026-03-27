@@ -58,6 +58,22 @@ When a concept is ready to share:
 
 ---
 
+## Metrics
+
+Research data supporting the navigation redesign decisions. Live at **`http://localhost:5173/metrics`**.
+
+| Request | Question | Finding |
+|---------|----------|---------|
+| 1 — Org Distribution | Should we build a global org-switcher? | 97.9% of users belong to exactly 1 org. Switcher is an edge case; org **discovery** is the real gap. |
+| 2 — Invisible Users | Are we undercounting our user base? | Yes. 429k projects scanned in 30 days, 0 with user attribution. Active Contributors are ~10x larger than the UI login metric. |
+| 3 — Onboarding Funnel | Is the Explore link acting as an onboarding bridge? | No. 96.9% of new users never add a project in their first 7 days. Critical drop-off at the org/project discovery step. |
+
+**Data sources:** `sonar.fct_sc_user_role` (Jan 2025 snapshot), `product_events.user_logged_in`, `product_events.analysis_finished`, `product_events.user_created`, `product_events.project_created`
+
+Raw findings are also saved at `~/Documents/Data/sqc-nav-redesign/sqc_nav_research_findings.md`.
+
+---
+
 ## GitHub Pages Setup Guide
 
 This guide covers how to set up a new Vite + React project for GitHub Pages deployment.
