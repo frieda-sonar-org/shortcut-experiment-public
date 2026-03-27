@@ -46,11 +46,11 @@ Always ensure `public/.nojekyll` exists. Without it, GitHub Pages runs Jekyll on
 - If you ever see "Failed to load module script… MIME type of application/octet-stream" on the deployed site, check that `public/.nojekyll` exists
 
 **Vite `base` path**
-Set `base` in `vite.config.ts` to match where the app is actually served:
-- `base: '/'` — for a custom domain or `username.github.io` root (user/org page)
-- `base: '/<repo-name>/'` — for a standard project page at `username.github.io/<repo-name>/`
+`vite.config.ts` uses `GITHUB_REPOSITORY` env var (set automatically in CI) to determine the base:
+- `frieda-sonar-org/shortcut-experiment-public` → `base: '/shortcut-experiment-public/'` (project page)
+- Everything else (private repo + local dev) → `base: '/'`
 
-This project is deployed at `frieda-sonar-org.github.io/shortcut-experiment-public/`, so `base: '/shortcut-experiment-public/'`.
+Do not hardcode the base path — the dynamic logic handles both deployments.
 
 ## Skills
 
